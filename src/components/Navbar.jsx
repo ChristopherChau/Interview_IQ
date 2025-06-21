@@ -2,6 +2,7 @@
 import { HomeIcon, PinRightIcon } from "@radix-ui/react-icons";
 import PreviousChatCard from "./PreviousChatCard";
 import { useState, useEffect } from "react";
+import supabase from "@/lib/supabaseAnon";
 
 export default function Navbar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -9,150 +10,6 @@ export default function Navbar() {
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const previousChats = [
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
     {
       chat_name: "Interview 1dsadsadsadasdasdsa",
       chat_id: "/chat/1",
@@ -176,7 +33,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 640){
+      if (window.innerWidth < 640) {
         setIsCollapsed(true);
       }
     };
@@ -184,8 +41,11 @@ export default function Navbar() {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-
-  }, [])
+  }, []);
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+    window.location.href = "/login";
+  }
 
   return (
     <>
@@ -193,12 +53,12 @@ export default function Navbar() {
         {/* Navbar Content */}
         <div
           className={`h-screen overflow-y-auto bg-red-300 flex flex-col transition-all duration-300 ${
-              isCollapsed
-              ? "w-0"
-              : "min-w-[160px] max-w-[225px] w-auto"
+            isCollapsed ? "w-0" : "min-w-[160px] max-w-[225px] w-auto"
           }`}
         >
-          <div className="text-center sticky top-0 z-10 text-xl font-semibold py-6">InterviewIQ</div>
+          <div className="text-center sticky top-0 z-10 text-xl font-semibold py-6">
+            InterviewIQ
+          </div>
           {!isCollapsed && (
             <div>
               {navBarItems.map((item, index) => (
@@ -221,6 +81,7 @@ export default function Navbar() {
               </div>
             </div>
           )}
+          <button onClick={signOut}>Sign out (temporary placement)</button>
         </div>
         <div>
           <button

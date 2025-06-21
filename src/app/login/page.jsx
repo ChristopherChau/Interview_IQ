@@ -2,7 +2,7 @@
 import { Auth } from "@supabase/auth-ui-react";
 import Image from "next/image";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import supabase from "@/lib/supabaseServiceClient";
+import supabase from "@/lib/supabaseAnon";
 
 export default function LoginPage() {
   return (

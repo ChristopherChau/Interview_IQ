@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from 'next/navigation';
-import supabase from "@/lib/supabaseServiceClient";
+import supabaseAnon from "@/lib/supabaseAnon";
 
 export default function AuthGuard({children}) {
   const [session, setSession] = useState(null);
@@ -11,9 +11,11 @@ export default function AuthGuard({children}) {
 
   useEffect(() => {
     const getSession = async () => {
-      const { data } = await supabase.auth.getSession();
+      const { data } = await supabaseAnon.auth.getSession();
       setSession(data.session);
       setIsLoading(false);
+
+      console.log(data.session);
 
       const isGuest = localStorage.getItem("isGuest");
       if (isGuest === "true"){
@@ -30,7 +32,7 @@ export default function AuthGuard({children}) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabaseAnon.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
 
@@ -48,7 +50,7 @@ export default function AuthGuard({children}) {
   if (!session && localStorage.getItem("isGuest") !== "true") {
     return (
       <Auth
-        supabaseClient={supabase}
+        supabaseClient={supabaseAnon}
         providers={["google"]}
         appearance={{ theme: ThemeSupa }}
       />
