@@ -15,6 +15,12 @@ export default function AuthGuard({children}) {
       setSession(data.session);
       setIsLoading(false);
 
+      const isGuest = localStorage.getItem("isGuest");
+      if (isGuest === "true"){
+        setIsLoading(false);
+        return;
+      }
+
       if (!data.session && pathname !== '/login'){
         router.push('/login');
       }
@@ -38,6 +44,16 @@ export default function AuthGuard({children}) {
   }
 
   if (!session) return null;
+  
+  if (!session && localStorage.getItem("isGuest") !== "true") {
+    return (
+      <Auth
+        supabaseClient={supabase}
+        providers={["google"]}
+        appearance={{ theme: ThemeSupa }}
+      />
+    );
+  }
 
   return children;
 
