@@ -3,6 +3,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import Image from "next/image";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import supabase from "@/lib/supabaseAnon";
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   return (
@@ -30,7 +31,7 @@ export default function LoginPage() {
                 className="cursor-pointer underline"
                 onClick={() => {
                   localStorage.setItem("isGuest", "true");
-                  window.location.href = "/";
+                  router.push('/login');
                 }}
               >
                 Continue as guest

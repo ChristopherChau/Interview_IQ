@@ -3,8 +3,10 @@ import { HomeIcon, PinRightIcon } from "@radix-ui/react-icons";
 import PreviousChatCard from "./PreviousChatCard";
 import { useState, useEffect } from "react";
 import supabase from "@/lib/supabaseAnon";
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
+  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
@@ -44,7 +46,8 @@ export default function Navbar() {
   }, []);
   async function signOut() {
     const { error } = await supabase.auth.signOut();
-    window.location.href = "/login";
+    localStorage.setItem("isGuest", "false");
+    router.push('/login');
   }
 
   return (
