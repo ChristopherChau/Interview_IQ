@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
-import Navbar from "../components/Navbar.jsx"
+import HomePage from "@/components/home/page.jsx";
 
 export default function Home() {
   return (
     <>
-      <Navbar/>r
+      <HomePage/>
     </>
   );
 }

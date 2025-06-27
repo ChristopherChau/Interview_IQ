@@ -23,7 +23,7 @@ export default function LoginPage() {
                 INTERVIEW<span className="text-blue-400">IQ</span>
               </p>
             </h1>
-            <h2 className="text-2xl ">Welcome</h2>
+            <h2 className="text-2xl">Welcome</h2>
             <div className="my-2 text-gray-400">
               <p>Please login to start interviewing</p>
               <p>or</p>

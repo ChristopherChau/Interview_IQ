@@ -1,12 +1,9 @@
 "use client";
-import { HomeIcon, PinRightIcon } from "@radix-ui/react-icons";
+import { HomeIcon, PinLeftIcon } from "@radix-ui/react-icons";
 import PreviousChatCard from "./PreviousChatCard";
 import { useState, useEffect } from "react";
-import supabase from "@/lib/supabaseAnon";
-import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
@@ -44,11 +41,6 @@ export default function Navbar() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    localStorage.setItem("isGuest", "false");
-    router.push('/login');
-  }
 
   return (
     <>
@@ -84,14 +76,13 @@ export default function Navbar() {
               </div>
             </div>
           )}
-          <button onClick={signOut}>Sign out (temporary placement)</button>
         </div>
         <div>
           <button
             onClick={toggleCollapse}
             className={`relative cursor-pointer p-2 hover:bg-gray-300 rounded-lg`}
           >
-            <PinRightIcon
+            <PinLeftIcon
               className={`transform transition-transform duration-300 size-4 ${
                 isCollapsed ? "rotate-180" : ""
               }`}
