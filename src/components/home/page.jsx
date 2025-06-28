@@ -12,7 +12,6 @@ export default function HomePage() {
         <ProfileMenu />
       </div>
       <div className="text-center">
-        {/* TODO: Make it so this says Welcome to InterviewIQ if we're signed in as a guest or hello, name if we're signed in */}
         <h1 className="text-2xl">Welcome to InterviewIQ!</h1> 
         <p className="text-gray-400 mt-2">Click start interview to hop into your mock interview!</p>
       </div>

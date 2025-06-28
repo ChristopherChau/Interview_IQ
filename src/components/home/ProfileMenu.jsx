@@ -7,8 +7,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+import { useState, useEffect } from "react";
+import { ExitIcon, PersonIcon } from "@radix-ui/react-icons";
 
 export default function ProfileMenu() {
   const router = useRouter();
@@ -20,17 +24,41 @@ export default function ProfileMenu() {
     localStorage.setItem("isGuest", "false");
     router.push("/login");
   }
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const getSession = async () => {
+      const { data } = await supabaseAnon.auth.getSession();
+      if (isMounted) {
+        setAvatarUrl(data.session.user.user_metadata.avatar_url);
+        setUsername(data.session.user.user_metadata.name);
+      }
+    };
+
+    getSession();
+  }, []);
 
   return (
     <div className="flex justify-end">
       <DropdownMenu className="cursor-pointer">
         <DropdownMenuTrigger>
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage src={avatarUrl} />
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={signOut}>Log Out</DropdownMenuItem>
+          <DropdownMenuLabel className="flex items-center gap-2 ml-2 font-medium">
+            <PersonIcon />
+            {username}
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={signOut}>
+            <ExitIcon />
+            Log Out
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
