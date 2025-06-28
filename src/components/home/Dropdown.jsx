@@ -25,8 +25,10 @@ import { Controller } from "react-hook-form";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 
 export default function Dropdown({
+  errors,
   type,
   label,
   name,
@@ -35,7 +37,14 @@ export default function Dropdown({
   setSelected,
   open,
 }) {
-  const openRoles = type === "behavioral" ? behavioralRoles : type === "experience" ? experienceLevels : type === "focus" ? behavioralFocus : technicalRoles;
+  const openRoles =
+    type === "behavioral"
+      ? behavioralRoles
+      : type === "experience"
+      ? experienceLevels
+      : type === "focus"
+      ? behavioralFocus
+      : technicalRoles;
   const buttonRef = useRef(null);
   const [buttonWidth, setButtonWidth] = useState(0);
 
@@ -48,13 +57,10 @@ export default function Dropdown({
   const getButtonText = (value) => {
     if (value) {
       return value;
-    }
-    else{
-
+    } else {
       return `Select ${label}`;
     }
-
-  }
+  };
 
   return (
     <div>
@@ -63,17 +69,34 @@ export default function Dropdown({
         name={name}
         render={({ field }) => (
           <div>
+            <p
+              className={`min-h-[1.25rem] text-red-500 ${
+                errors && errors[name] ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              {errors[name]?.message ?? ""}
+            </p>
+
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
-                  className="w-full justify-between border-gray-300 shadow-sm"
+                  className={`w-full justify-between shadow-sm ${
+                    errors && errors[name]
+                      ? "border-red-500 border-2"
+                      : "border-gray-300"
+                  }`}
                   variant="outline"
                   ref={buttonRef}
                 >
                   {getButtonText(field.value)}
+                  <ChevronDownIcon className={`transition-transform duration-300 ${open ? "-rotate-180" : ""}`}/>
                 </Button>
               </PopoverTrigger>
-              <PopoverContent side="bottom" align="start" style={{width: buttonWidth}}>
+              <PopoverContent
+                side="bottom"
+                align="start"
+                style={{ width: buttonWidth }}
+              >
                 <Command>
                   <CommandInput placeholder={`Select ${label}`} />
                   <CommandGroup>

@@ -19,23 +19,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Dropdown from "./Dropdown";
 
 export default function InputCard() {
-  const [selectedTab, setSelectedTab] = useState("behavioral");
   const {
     control,
     handleSubmit,
-    register,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      role: "",
-      experience: "",
+      tab: "behavioral",
+      behavioral_role: "",
+      behavioral_experience: "",
+      behavioral_focus: "",
+      technical_role: "",
+      technical_experience: "",
     },
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = () => {
+  const onSubmit = (data) => {
     console.log("Implement submit button");
+    console.log(data);
   };
+
+  const [selectedTab, setSelectedTab] = useState("behavioral");
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedExperience, setSelectedExperience] = useState("");
   const [selectedFocus, setSelectedFocus] = useState("");
@@ -49,11 +56,36 @@ export default function InputCard() {
     );
   }, [selectedRole, selectedExperience, selectedFocus]);
 
+  useEffect(() => {
+    setValue("tab", selectedTab);
+  }, [selectedTab]);
+
+  const resetForm = (tab) => {
+    reset({
+      tab,
+      behavioral_role: "",
+      behavioral_experience: "",
+      behavioral_focus: "",
+      technical_role: "",
+      technical_experience: "",
+    });
+    setSelectedRole("");
+    setSelectedExperience("");
+    setSelectedFocus("");
+    setRoleOpen(false);
+    setExperienceOpen(false);
+    setFocusOpen(false);
+  };
+  
   return (
-    <form>
+    <form
+      onSubmit={handleSubmit(onSubmit, (errors) =>
+        console.log("Validation errors:", errors)
+      )}
+    >
       <Card>
         <CardHeader>
-          <CardDescription>Choose your interview style</CardDescription>
+          <CardDescription className="font-semibold text-base text-black ">Choose your interview style</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col justify-center">
           <Tabs defaultValue="behavioral" className="w-[400px]">
@@ -61,18 +93,27 @@ export default function InputCard() {
               <TabsTrigger
                 className="px-16 h-full rounded-xl data-[state=active]:bg-[#171717] data-[state=active]:text-white"
                 value="behavioral"
+                onClick={() => {
+                  setSelectedTab("behavioral");
+                  resetForm("behavioral");
+              }}
               >
                 Behavioral
               </TabsTrigger>
               <TabsTrigger
                 className="px-16 h-full rounded-xl data-[state=active]:bg-[#171717] data-[state=active]:text-white"
                 value="technical"
+                onClick={() => {
+                  setSelectedTab("technical");
+                  resetForm("technical")
+                }}
               >
                 Technical
               </TabsTrigger>
             </TabsList>
             <TabsContent value="behavioral" className="flex flex-col gap-2">
               <Dropdown
+                errors={errors}
                 type="behavioral"
                 label="Industry"
                 name="behavioral_role"
@@ -82,6 +123,7 @@ export default function InputCard() {
                 open={roleOpen}
               />
               <Dropdown
+                errors={errors}
                 type="experience"
                 label="Experience"
                 name="behavioral_experience"
@@ -91,6 +133,7 @@ export default function InputCard() {
                 open={experienceOpen}
               />
               <Dropdown
+                errors={errors}
                 type="focus"
                 label="Focus"
                 name="behavioral_focus"
@@ -100,10 +143,33 @@ export default function InputCard() {
                 open={focusOpen}
               />
             </TabsContent>
-            <TabsContent value="technical"></TabsContent>
+            <TabsContent value="technical" className="flex flex-col gap-2">
+              <Dropdown
+                errors={errors}
+                type="technical"
+                label="Role"
+                name="technical_role"
+                control={control}
+                setOpen={setRoleOpen}
+                setSelected={setSelectedRole}
+                open={roleOpen}
+              />
+              <Dropdown
+                errors={errors}
+                type="experience"
+                label="Experience"
+                name="technical_experience"
+                control={control}
+                setOpen={setExperienceOpen}
+                setSelected={setSelectedExperience}
+                open={experienceOpen}
+              />
+            </TabsContent>
           </Tabs>
-          <CardFooter className="mt-4 px-0">
-            <Button className="w-full">Start Interview</Button>
+          <CardFooter className="mt-6 px-0">
+            <Button type="submit" className="w-full">
+              Start Interview
+            </Button>
           </CardFooter>
         </CardContent>
       </Card>
