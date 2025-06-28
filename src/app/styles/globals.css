@@ -124,3 +124,37 @@
     @apply bg-background text-foreground font-sans;
   }
 }
+
+@keyframes barPulse {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.4)
+  } 
+
+}
+
+.animate-barPulse {
+  animation: barPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes leftWaveFade {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  33% {
+    transform: translateX(-4px) scale(1.3);
+  }
+  66% {
+    transform: translateX(-8px) scale(1.6);
+  }
+  100% {
+    transform: translateX(-12px) scale(1.9);
+  }
+}
+
+.animate-leftWaveFade {
+  animation: leftWaveFade 1s ease-in-out infinite;
+}
