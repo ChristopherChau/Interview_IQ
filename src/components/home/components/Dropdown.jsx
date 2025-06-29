@@ -20,7 +20,7 @@ import {
   behavioralFocus,
   technicalRoles,
   experienceLevels,
-} from "./roles";
+} from "../roles";
 import { Controller } from "react-hook-form";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { useRef, useState, useEffect } from "react";

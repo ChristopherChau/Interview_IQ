@@ -1,9 +1,9 @@
 "use client";
 
 import supabaseAnon from "@/lib/supabaseAnon";
-import ProfileMenu from "./ProfileMenu";
-import ModelCard from "./ModelCard";
-import InputCard from "./InputCard";
+import ProfileMenu from "./components/ProfileMenu";
+import ModelCard from "./components/ModelCard";
+import InputCard from "./components/InputCard";
 
 export default function HomePage() {
   return (
