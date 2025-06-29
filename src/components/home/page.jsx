@@ -1,9 +1,9 @@
 "use client";
 
 import supabaseAnon from "@/lib/supabaseAnon";
-import ProfileMenu from "./components/ProfileMenu";
+import ProfileMenu from "../profilemenu/ProfileMenu";
 import ModelCard from "./components/ModelCard";
-import InputCard from "./components/InputCard";
+import InputCard from "../input_card/InputCard";
 
 export default function HomePage() {
   return (
@@ -12,12 +12,14 @@ export default function HomePage() {
         <ProfileMenu />
       </div>
       <div className="text-center">
-        <h1 className="text-2xl">Welcome to InterviewIQ!</h1> 
-        <p className="text-gray-400 mt-2">Click start interview to hop into your mock interview!</p>
+        <h1 className="text-2xl">Welcome to InterviewIQ!</h1>
+        <p className="text-gray-400 mt-2">
+          Click start interview to hop into your mock interview!
+        </p>
       </div>
       <div className="flex gap-4">
-        <ModelCard/>
-        <InputCard/>
+        <ModelCard />
+        <InputCard />
       </div>
     </main>
   );

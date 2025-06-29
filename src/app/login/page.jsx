@@ -3,9 +3,32 @@ import { Auth } from "@supabase/auth-ui-react";
 import Image from "next/image";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import supabase from "@/lib/supabaseAnon";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  async function insertUser(user_id) {
+    try {
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: "application/json",
+        body: JSON.stringify({
+          user_id: user_id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Error when inserting to users table, response status: ${response.status}`
+        );
+      }
+      const data = response.json();
+      return data;
+    } catch (err) {
+      console.error("Failed to insert user into user table:", err.message);
+      throw err;
+    }
+  }
+
   return (
     <>
       <div className="flex h-screen justify-center">
@@ -31,7 +54,7 @@ export default function LoginPage() {
                 className="cursor-pointer underline"
                 onClick={() => {
                   localStorage.setItem("isGuest", "true");
-                  router.push('/login');
+                  router.push("/login");
                 }}
               >
                 Continue as guest
@@ -47,19 +70,4 @@ export default function LoginPage() {
       </div>
     </>
   );
-}
-
-{
-  /* <div className="flex-1 flex bg-blue-300 justify-center">
-  <div className="flex flex-col text-left justify-center">
-    <h2>InterviewIQ</h2>
-    <ul>
-      <li>Instant Feedback</li>
-      <li>Elevate Your Interview Game</li>
-      <li>Practice Anytime</li>
-    </ul>
-  </div> */
-}
-{
-  /* </div> */
 }
