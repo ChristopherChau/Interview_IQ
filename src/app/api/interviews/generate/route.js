@@ -18,16 +18,16 @@ export async function POST(req) {
       },
       body: JSON.stringify(prompt),
     });
-    
-    const data = lambdaResponse.json();
+    console.log(lambdaResponse);
+    const data = await lambdaResponse.json();
     if (!lambdaResponse){
       throw new Error(data.error || "Failed to fetch from Lambda response");
     }
     
-    return new Response({
+    return new Response(JSON.stringify({
       message: "Successful response from Lambda",
       data
-    }, {status: 200});
+    }, {status: 200}));
   }
   catch (err){
     console.error(

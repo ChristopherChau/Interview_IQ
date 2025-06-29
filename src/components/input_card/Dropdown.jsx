@@ -20,7 +20,7 @@ import {
   behavioralFocus,
   technicalRoles,
   experienceLevels,
-} from "../roles";
+} from "./roles";
 import { Controller } from "react-hook-form";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { useRef, useState, useEffect } from "react";
@@ -89,7 +89,11 @@ export default function Dropdown({
                   ref={buttonRef}
                 >
                   {getButtonText(field.value)}
-                  <ChevronDownIcon className={`transition-transform duration-300 ${open ? "-rotate-180" : ""}`}/>
+                  <ChevronDownIcon
+                    className={`transition-transform duration-300 ${
+                      open ? "-rotate-180" : ""
+                    }`}
+                  />
                 </Button>
               </PopoverTrigger>
               <PopoverContent

@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { formSchema } from "../schema";
+import { formSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Dropdown from "./Dropdown";
 
@@ -87,15 +87,12 @@ export default function InputCard() {
         open={openDropdown[config.name] || false}
         setOpen={(val) => {
           setOpenDropdown((prev) => ({ ...prev, [config.name]: val }));
-        }
-      }
+        }}
       />
     ));
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Card>
         <CardHeader>
           <CardDescription className="font-semibold text-base text-black ">
@@ -105,7 +102,7 @@ export default function InputCard() {
         <CardContent className="flex flex-col justify-center">
           <Tabs defaultValue="behavioral" className="w-[400px]">
             <TabsList>
-            {["behavioral", "technical"].map((tab) => (
+              {["behavioral", "technical"].map((tab) => (
                 <TabsTrigger
                   key={tab}
                   value={tab}
@@ -120,7 +117,11 @@ export default function InputCard() {
               ))}
             </TabsList>
             {["behavioral", "technical"].map((tab) => (
-              <TabsContent key={tab} value={tab} className="flex flex-col gap-2">
+              <TabsContent
+                key={tab}
+                value={tab}
+                className="flex flex-col gap-2"
+              >
                 {renderDropdowns(tab)}
               </TabsContent>
             ))}
