@@ -16,7 +16,7 @@ export async function POST(req) {
       "question": "<interview question>",
       "title": "<brief topic title>"
     }
-    Ask a ${type} mock interview question for a ${role} targeting a(n) ${experience} candidate. This question's depth will be relative to their experience. ${type === "behavioral" && focus ? `Make it a focus on ${focus}` : ""}`;
+    Respond with **only** a valid JSON object. Do not include any text before or after it. Do not wrap it in triple backticks or any markdown formatting. The response **must** be raw JSON that can be parsed with 'JSON.parse()'. Your response should look exactly like: { "question": "Your question here", "title": "Your title here" }. Ask a ${type} mock interview question for a ${role} targeting a(n) ${experience} candidate. This question's depth will be relative to their experience. ${type === "behavioral" && focus ? `Make it a focus on ${focus}` : ""}`;
     
     const lambdaResponse = await fetch(process.env.LAMBDA_BEDROCK_URL, {
       method: "POST",
