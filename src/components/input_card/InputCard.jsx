@@ -17,6 +17,9 @@ import { useState, useEffect } from "react";
 import { formSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Dropdown from "./Dropdown";
+import { fetchQuestions, rateResponse } from "./LambdaFunctions";
+import LoadingSpinner from "./LoadingSpinner";
+import NotesInput from "./NotesInput"
 
 export default function InputCard() {
   const {
@@ -37,13 +40,10 @@ export default function InputCard() {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log("Implement submit button");
-    console.log(data);
-  };
-
   const [selectedTab, setSelectedTab] = useState("behavioral");
   const [openDropdown, setOpenDropdown] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchedQuestions, setFetchedQuestions] = useState(false);
 
   useEffect(() => {
     setValue("tab", selectedTab);
@@ -82,8 +82,8 @@ export default function InputCard() {
       <Dropdown
         key={config.name}
         {...config}
-        control={control}
         errors={errors}
+        control={control}
         open={openDropdown[config.name] || false}
         setOpen={(val) => {
           setOpenDropdown((prev) => ({ ...prev, [config.name]: val }));
@@ -91,47 +91,75 @@ export default function InputCard() {
       />
     ));
 
+  const startInterview = async (data) => {
+    setIsLoading(true);
+    let type, role, experience, focus;
+
+    if (data.tab === "behavioral") {
+      type = "behavioral";
+      role = data.behavioral_role;
+      experience = data.behavioral_experience;
+      focus = data.behavioral_focus;
+    } else {
+      type = "technical";
+      role = data.technical_role;
+      experience = data.technical_experience;
+    }
+    const response = await fetchQuestions(type, role, experience, focus);
+    setIsLoading(false);
+    console.log("Starting interview:", response);
+    setFetchedQuestions(true);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Card>
-        <CardHeader>
-          <CardDescription className="font-semibold text-base text-black ">
-            Choose your interview style
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col justify-center">
-          <Tabs defaultValue="behavioral" className="w-[400px]">
-            <TabsList>
-              {["behavioral", "technical"].map((tab) => (
-                <TabsTrigger
-                  key={tab}
-                  value={tab}
-                  onClick={() => {
-                    setSelectedTab(tab);
-                    resetForm(tab);
-                  }}
-                  className="px-16 h-full rounded-xl data-[state=active]:bg-[#171717] data-[state=active]:text-white"
-                >
-                  {tab[0].toUpperCase() + tab.slice(1)}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            {["behavioral", "technical"].map((tab) => (
-              <TabsContent
-                key={tab}
-                value={tab}
-                className="flex flex-col gap-2"
-              >
-                {renderDropdowns(tab)}
-              </TabsContent>
-            ))}
-          </Tabs>
-          <CardFooter className="mt-6 px-0">
-            <Button type="submit" className="w-full">
-              Start Interview
-            </Button>
-          </CardFooter>
-        </CardContent>
+    <form onSubmit={handleSubmit(startInterview)}>
+      <Card className="w-[450px] min-h-[360px]">
+        {isLoading ? (
+          <LoadingSpinner/>
+        ) : fetchedQuestions ? (
+          <NotesInput/>
+        ) : (
+          <>
+            <CardHeader>
+              <CardDescription className="font-semibold text-base text-black ">
+                Choose your interview style
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col justify-center">
+              <Tabs defaultValue="behavioral" className="w-[400px]">
+                <TabsList>
+                  {["behavioral", "technical"].map((tab) => (
+                    <TabsTrigger
+                      key={tab}
+                      value={tab}
+                      onClick={() => {
+                        setSelectedTab(tab);
+                        resetForm(tab);
+                      }}
+                      className="px-16 h-full rounded-xl data-[state=active]:bg-[#171717] data-[state=active]:text-white"
+                    >
+                      {tab[0].toUpperCase() + tab.slice(1)}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                {["behavioral", "technical"].map((tab) => (
+                  <TabsContent
+                    key={tab}
+                    value={tab}
+                    className="flex flex-col gap-2"
+                  >
+                    {renderDropdowns(tab)}
+                  </TabsContent>
+                ))}
+              </Tabs>
+              <CardFooter className="mt-6 px-0">
+                <Button type="submit" className="w-full">
+                  Start Interview
+                </Button>
+              </CardFooter>
+            </CardContent>
+          </>
+        )}
       </Card>
     </form>
   );

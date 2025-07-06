@@ -24,7 +24,7 @@ export async function POST(req) {
         "overall": "<notes>"
       }
     }
-    Grade my response to this question: ${question}. This is my response: ${response}`;
+    Only return valid JSON. Do not include any commentary, markdown, or formatting. Grade my response to this question: ${question}. This is my response: ${response}`;
 
     const lambdaResponse = await fetch(process.env.LAMBDA_BEDROCK_URL, {
       method: "POST",

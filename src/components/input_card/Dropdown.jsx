@@ -34,7 +34,7 @@ export default function Dropdown({
   name,
   control,
   setOpen,
-  setSelected,
+  // setSelected,
   open,
 }) {
   const openRoles =
@@ -113,7 +113,7 @@ export default function Dropdown({
                             selectedRole === field.value ? "" : selectedRole
                           );
                           setOpen(false);
-                          setSelected(selectedRole);
+                          // setSelected(selectedRole);
                         }}
                       >
                         <CheckIcon

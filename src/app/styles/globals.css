@@ -158,3 +158,24 @@
 .animate-leftWaveFade {
   animation: leftWaveFade 1s ease-in-out infinite;
 }
+
+@keyframes dots {
+  0% {
+    content: ".";
+  }
+  33% {
+    content: "..";
+  }
+  66% {
+    content: "...";
+  }
+  100% {
+    content: "";
+  }
+}
+
+.loading-dots::after {
+  content: "";
+  display: inline-block;
+  animation: dots 3s steps(3, end) infinite;
+}
