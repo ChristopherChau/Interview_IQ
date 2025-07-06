@@ -21,7 +21,7 @@ export async function fetchQuestions(prompt) {
 
 export async function rateResponse(question, user_response) {
   try {
-    const response = await fetch("api/interviews/rate", {
+    const response = await fetch("api/interviews/grade", {
       method: "POST",
       headers: "application/json",
       body: JSON.stringify({

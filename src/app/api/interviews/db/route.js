@@ -1,4 +1,4 @@
-// app/api/interviews.route.js
+// app/api/interviews/db.route.js
 
 import supabaseClient from "@/lib/supabaseServiceClient";
 
