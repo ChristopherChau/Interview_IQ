@@ -17,13 +17,13 @@ export async function POST(req) {
       "title": "<brief topic title>"
     }
     Ask a ${type} mock interview question for a ${role} targeting a(n) ${experience} candidate. This question's depth will be relative to their experience. ${type === "behavioral" && focus ? `Make it a focus on ${focus}` : ""}`;
-
+    
     const lambdaResponse = await fetch(process.env.LAMBDA_BEDROCK_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(prompt),
+      body: JSON.stringify({prompt}),
     });
     console.log(lambdaResponse);
     const data = await lambdaResponse.json();

@@ -31,7 +31,7 @@ export async function POST(req) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(prompt),
+      body: JSON.stringify({prompt}),
     });
     console.log(lambdaResponse);
     const data = await lambdaResponse.json();
