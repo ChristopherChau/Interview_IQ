@@ -17,5 +17,5 @@ export default function TypingText({ text, speed = 40 }) {
     return () => clearInterval(interval); 
   }, [text]);
 
-  return <p className="text-2xl text-center font-semibold whitespace-pre-wrap">{typedQuestion}</p>;
+  return <p className="text-2xl text-center font-medium whitespace-pre-wrap">{typedQuestion}</p>;
 }

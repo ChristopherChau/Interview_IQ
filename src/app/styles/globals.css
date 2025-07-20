@@ -45,7 +45,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: #f5f5f5;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -114,10 +114,6 @@
 
 .glow {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.15)
-}
-
-.light-bg{
-  background-color: #f5f5f5;
 }
 
 @layer base {
