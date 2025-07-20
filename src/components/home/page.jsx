@@ -4,10 +4,15 @@ import supabaseAnon from "@/lib/supabaseAnon";
 import ProfileMenu from "../profilemenu/ProfileMenu";
 import ModelCard from "./components/ModelCard";
 import InputCard from "../input_card/InputCard";
+import TypingText from "../input_card/TypingText";
+
+import { useState } from "react";
 
 export default function HomePage() {
+  const [question, setQuestion] = useState("");
+
   return (
-    <main className="bg-blue-500 relative flex flex-col z-10 w-full h-full items-center justify-center">
+    <main className="light-bg relative flex flex-col z-10 w-full h-full items-center justify-center">
       <div className="absolute top-4 right-4">
         <ProfileMenu />
       </div>
@@ -17,9 +22,14 @@ export default function HomePage() {
           Click start interview to hop into your mock interview!
         </p>
       </div>
-      <div className="flex gap-4">
-        <ModelCard />
-        <InputCard />
+      <div className="flex flex-col mt-6 gap-6 max-w-[800px]">
+        <div className="flex gap-4">
+          <ModelCard />
+          <InputCard setQuestion={setQuestion} />
+        </div>
+        <div>
+          <TypingText text={question} />
+        </div>
       </div>
     </main>
   );

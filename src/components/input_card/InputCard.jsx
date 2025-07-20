@@ -17,11 +17,11 @@ import { useState, useEffect } from "react";
 import { formSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Dropdown from "./Dropdown";
-import { fetchQuestions, rateResponse } from "./LambdaFunctions";
+import { fetchQuestions, rateResponse } from "./Functions/LambdaFunctions";
 import LoadingSpinner from "./LoadingSpinner";
-import NotesInput from "./NotesInput"
+import NotesInput from "./NotesInput";
 
-export default function InputCard() {
+export default function InputCard({setQuestion}) {
   const {
     control,
     handleSubmit,
@@ -43,7 +43,8 @@ export default function InputCard() {
   const [selectedTab, setSelectedTab] = useState("behavioral");
   const [openDropdown, setOpenDropdown] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [fetchedQuestions, setFetchedQuestions] = useState(false);
+  const [isFetchedQuestion, setIsFetchedQuestion] = useState(false);
+  // const [question, setQuestion] = useState("");
 
   useEffect(() => {
     setValue("tab", selectedTab);
@@ -108,16 +109,17 @@ export default function InputCard() {
     const response = await fetchQuestions(type, role, experience, focus);
     setIsLoading(false);
     console.log("Starting interview:", response);
-    setFetchedQuestions(true);
+    setIsFetchedQuestion(true);
+    setQuestion(response.question);
   };
 
   return (
     <form onSubmit={handleSubmit(startInterview)}>
       <Card className="w-[450px] min-h-[360px]">
         {isLoading ? (
-          <LoadingSpinner/>
-        ) : fetchedQuestions ? (
-          <NotesInput/>
+          <LoadingSpinner />
+        ) : isFetchedQuestion ? (
+            <NotesInput />
         ) : (
           <>
             <CardHeader>
