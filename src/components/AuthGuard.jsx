@@ -37,11 +37,14 @@ export default function AuthGuard({children}) {
     });
 
     return () => subscription.unsubscribe();
-  }, [pathname]);
+  }, [pathname, router]);
 
   if (isLoading) return null;
 
-  if (!session && pathname === '/login') {
+  const isGuest = localStorage.getItem("isGuest") === "true";
+
+
+  if (session || isGuest) {
     return children;
   }
 

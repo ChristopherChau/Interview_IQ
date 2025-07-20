@@ -13,9 +13,29 @@ import { useRouter } from "next/navigation";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { useState, useEffect } from "react";
 import { ExitIcon, PersonIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
 
 export default function ProfileMenu() {
   const router = useRouter();
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [username, setUsername] = useState("");
+  const [hasSession, setHasSession] = useState(false);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data } = await supabaseAnon.auth.getSession();
+      if (data.session) {
+        setAvatarUrl(data.session.user.user_metadata.avatar_url);
+        setUsername(data.session.user.user_metadata.name);
+        setHasSession(true);
+      } else {
+        setHasSession(false);
+      }
+    };
+
+    getSession();
+  }, []);
+
   async function signOut() {
     const { error } = await supabaseAnon.auth.signOut();
     if (error) {
@@ -24,27 +44,23 @@ export default function ProfileMenu() {
     localStorage.setItem("isGuest", "false");
     router.push("/login");
   }
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [username, setUsername] = useState("");
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const getSession = async () => {
-      const { data } = await supabaseAnon.auth.getSession();
-      if (isMounted) {
-        setAvatarUrl(data.session.user.user_metadata.avatar_url);
-        setUsername(data.session.user.user_metadata.name);
-      }
-    };
-
-    getSession();
-  }, []);
+  if (!hasSession) {
+    return (
+      <Button
+        variant="outline"
+        onClick={() => router.push("/login")}
+        className="text-sm"
+      >
+        Login
+      </Button>
+    );
+  }
 
   return (
     <div className="flex justify-end">
-      <DropdownMenu className="cursor-pointer">
-        <DropdownMenuTrigger>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="cursor-pointer">
           <Avatar>
             <AvatarImage src={avatarUrl} />
           </Avatar>
