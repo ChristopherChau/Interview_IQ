@@ -20,8 +20,10 @@ import Dropdown from "./Dropdown";
 import { fetchQuestions, rateResponse } from "./Functions/LambdaFunctions";
 import LoadingSpinner from "./LoadingSpinner";
 import NotesInput from "./NotesInput";
+import { insertInterview, insertDetails } from "./Functions/SubmitResponse";
 
-export default function InputCard({setQuestion}) {
+export default function InputCard({setQuestion, session}) {
+  
   const {
     control,
     handleSubmit,
@@ -44,7 +46,6 @@ export default function InputCard({setQuestion}) {
   const [openDropdown, setOpenDropdown] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchedQuestion, setIsFetchedQuestion] = useState(false);
-  // const [question, setQuestion] = useState("");
 
   useEffect(() => {
     setValue("tab", selectedTab);
@@ -106,11 +107,18 @@ export default function InputCard({setQuestion}) {
       role = data.technical_role;
       experience = data.technical_experience;
     }
-    const response = await fetchQuestions(type, role, experience, focus);
+    const questionResponse = await fetchQuestions(type, role, experience, focus);
     setIsLoading(false);
-    console.log("Starting interview:", response);
     setIsFetchedQuestion(true);
-    setQuestion(response.question);
+    console.log(questionResponse);
+    setQuestion(questionResponse.question);
+
+
+    if (session){
+      const user_id = session.user.id;
+      const insertInterviewResponse = await insertInterview(user_id, questionResponse.title);
+      console.log(insertInterviewResponse);
+    }
   };
 
   return (

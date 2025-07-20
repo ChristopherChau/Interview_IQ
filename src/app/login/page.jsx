@@ -4,33 +4,12 @@ import Image from "next/image";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import supabase from "@/lib/supabaseAnon";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
 
-  async function insertUser(user_id) {
-    try {
-      const response = await fetch("/api/users", {
-        method: "POST",
-        "Content-Type": "application/json",
-        body: JSON.stringify({
-          user_id: user_id,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `Error when inserting to users table, response status: ${response.status}`
-        );
-      }
-      const data = response.json();
-      return data;
-    } catch (err) {
-      console.error("Failed to insert user into user table:", err.message);
-      throw err;
-    }
-  }
-
+  
   return (
     <>
       <div className="flex h-screen justify-center">
@@ -67,6 +46,19 @@ export default function LoginPage() {
             supabaseClient={supabase}
             providers={["google"]}
             appearance={{ theme: ThemeSupa }}
+            onAuthStateChange={async (event, session) => {
+              console.log("Auth state change:", event, session); // ✅ Debug line
+              if (event === "SIGNED_IN" && session) {
+                const user_id = session.user.id;
+
+                const existingUsers = await getUser(user_id);
+                if (existingUsers.length === 0) {
+                  await insertUser(user_id);
+                }
+
+                router.push("/");
+              }
+            }}
           />
         </div>
       </div>
