@@ -6,11 +6,13 @@ import supabase from "@/lib/supabaseAnon";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   async function insertUser(user_id) {
     try {
       const response = await fetch("/api/users", {
         method: "POST",
-        headers: "application/json",
+        "Content-Type": "application/json",
         body: JSON.stringify({
           user_id: user_id,
         }),
@@ -54,7 +56,7 @@ export default function LoginPage() {
                 className="cursor-pointer underline"
                 onClick={() => {
                   localStorage.setItem("isGuest", "true");
-                  router.push("/login");
+                  router.push("/");
                 }}
               >
                 Continue as guest
