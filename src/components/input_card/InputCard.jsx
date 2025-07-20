@@ -17,12 +17,13 @@ import { useState, useEffect } from "react";
 import { formSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Dropdown from "./Dropdown";
-import { fetchQuestions, rateResponse } from "./Functions/LambdaFunctions";
+import { fetchQuestions, rateResponse } from "./apiFunctions/LambdaFunctions";
 import LoadingSpinner from "./LoadingSpinner";
-import NotesInput from "./NotesInput";
-import { insertInterview, insertDetails } from "./Functions/SubmitResponse";
+import RecordInput from "./RecordInput";
+import { insertInterview } from "./apiFunctions/SubmitResponse";
+import { DROPDOWN_CONFIGS } from "./roles";
 
-export default function InputCard({setQuestion, session}) {
+export default function InputCard({setQuestion, isAnimatingText, session}) {
   
   const {
     control,
@@ -46,26 +47,10 @@ export default function InputCard({setQuestion, session}) {
   const [openDropdown, setOpenDropdown] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchedQuestion, setIsFetchedQuestion] = useState(false);
-
+  const [interviewId, setInterviewId] = useState("")
   useEffect(() => {
     setValue("tab", selectedTab);
   }, [selectedTab]);
-
-  const DROPDOWN_CONFIGS = {
-    behavioral: [
-      { type: "behavioral", label: "Industry", name: "behavioral_role" },
-      {
-        type: "experience",
-        label: "Experience",
-        name: "behavioral_experience",
-      },
-      { type: "focus", label: "Focus", name: "behavioral_focus" },
-    ],
-    technical: [
-      { type: "technical", label: "Role", name: "technical_role" },
-      { type: "experience", label: "Experience", name: "technical_experience" },
-    ],
-  };
 
   const resetForm = (tab) => {
     reset({
@@ -110,14 +95,13 @@ export default function InputCard({setQuestion, session}) {
     const questionResponse = await fetchQuestions(type, role, experience, focus);
     setIsLoading(false);
     setIsFetchedQuestion(true);
-    console.log(questionResponse);
     setQuestion(questionResponse.question);
-
 
     if (session){
       const user_id = session.user.id;
       const insertInterviewResponse = await insertInterview(user_id, questionResponse.title);
-      console.log(insertInterviewResponse);
+      console.log(insertInterviewResponse.data[0].interview_id);
+      setInterviewId(insertInterviewResponse.data[0].interview_id);
     }
   };
 
@@ -127,7 +111,7 @@ export default function InputCard({setQuestion, session}) {
         {isLoading ? (
           <LoadingSpinner />
         ) : isFetchedQuestion ? (
-            <NotesInput />
+            <RecordInput isAnimatingText={isAnimatingText} interview_id={interviewId}/>
         ) : (
           <>
             <CardHeader>

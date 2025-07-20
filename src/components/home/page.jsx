@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 export default function HomePage() {
   const [question, setQuestion] = useState("");
   const [session, setSession] = useState(null);
+  const [isAnimatingText, setIsAnimatingText] = useState(false);
+
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -46,10 +48,10 @@ export default function HomePage() {
       <div className="flex flex-col mt-6 gap-6 max-w-[800px]">
         <div className="flex gap-4">
           <ModelCard />
-          <InputCard session={session} setQuestion={setQuestion} />
+          <InputCard session={session} setQuestion={setQuestion} isAnimatingText={isAnimatingText} />
         </div>
         <div>
-          <TypingText text={question} />
+          <TypingText text={question} setIsAnimatingText={setIsAnimatingText}/>
         </div>
       </div>
     </main>

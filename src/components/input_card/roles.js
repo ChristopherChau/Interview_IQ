@@ -5,3 +5,18 @@ export const technicalRoles = ["Full-stack Engineer", "Frontend Engineer", "Back
 
 export const experienceLevels = ["Intern", "Entry-Level", "Mid-Level", "Senior", "Staff/Principal", "Other"]
 
+export const DROPDOWN_CONFIGS = {
+  behavioral: [
+    { type: "behavioral", label: "Industry", name: "behavioral_role" },
+    {
+      type: "experience",
+      label: "Experience",
+      name: "behavioral_experience",
+    },
+    { type: "focus", label: "Focus", name: "behavioral_focus" },
+  ],
+  technical: [
+    { type: "technical", label: "Role", name: "technical_role" },
+    { type: "experience", label: "Experience", name: "technical_experience" },
+  ],
+};
