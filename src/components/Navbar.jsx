@@ -44,7 +44,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="flex relative border-r-2">
+      <div className="flex bg-white relative border-r-2">
         {/* Navbar Content */}
         <div
           className={`h-screen overflow-y-auto flex flex-col transition-all duration-300 ${

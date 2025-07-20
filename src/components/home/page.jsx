@@ -12,7 +12,7 @@ export default function HomePage() {
   const [question, setQuestion] = useState("");
 
   return (
-    <main className="light-bg relative flex flex-col z-10 w-full h-full items-center justify-center">
+    <main className="relative flex flex-col z-10 w-full h-full items-center justify-center">
       <div className="absolute top-4 right-4">
         <ProfileMenu />
       </div>
