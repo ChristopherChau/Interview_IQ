@@ -6,10 +6,31 @@ import ModelCard from "./components/ModelCard";
 import InputCard from "../input_card/InputCard";
 import TypingText from "../input_card/TypingText";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const [question, setQuestion] = useState("");
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data, error } = await supabaseAnon.auth.getSession();
+      if (error) {
+        console.error("Error getting session:", error.message);
+        return;
+      }
+      setSession(data.session);
+    }
+    fetchSession();
+
+    const {
+      data: { subscription },
+    } = supabaseAnon.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <main className="relative flex flex-col z-10 w-full h-full items-center justify-center">
@@ -25,7 +46,7 @@ export default function HomePage() {
       <div className="flex flex-col mt-6 gap-6 max-w-[800px]">
         <div className="flex gap-4">
           <ModelCard />
-          <InputCard setQuestion={setQuestion} />
+          <InputCard session={session} setQuestion={setQuestion} />
         </div>
         <div>
           <TypingText text={question} />

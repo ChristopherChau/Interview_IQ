@@ -2,7 +2,7 @@ export async function insertInterview(user_id, interview_title) {
   try {
     const response = await fetch("/api/interviews/db", {
       method: "POST",
-      headers: "application/json",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         user_id: user_id,
         title: interview_title,
@@ -31,7 +31,7 @@ export async function insertDetails(
   try {
     const response = await fetch("/api/interviews/db/details", {
       method: "POST",
-      headers: "application/json",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         interview_id: interview_id,
         question: question,
