@@ -1,7 +1,4 @@
-
-
-
-const loadingSpinner = () => {
+const loadingSpinner = ({text}) => {
   return (
     <>
       <div className="flex flex-col items-center gap-2 justify-center flex-grow h-full" role="status">
@@ -21,7 +18,7 @@ const loadingSpinner = () => {
                 fill="currentFill"
               />
             </svg>
-            <p className="text-xl mt-2">Loading<span className="loading-dots" /></p>
+            <p className="text-xl mt-2">{text}<span className="loading-dots" /></p>
 
           </div>
     </>

@@ -1,24 +1,27 @@
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import { insertDetails } from "./apiFunctions/SubmitResponse";
+import { rateResponse } from "./apiFunctions/LambdaFunctions";
+import { useRouter } from "next/navigation";
+import { useFeedbackStore } from "@/app/store/feedbackStore";
 
-const RecordInput = ({ interview_id, isAnimatingText }) => {
+const RecordInput = ({ interview_id, isAnimatingText, question, setIsGrading }) => {
+  const router = useRouter();
+  
   const [buttonText, setButtonText] = useState("Record Response");
   const recognitionRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
   const [spokenText, setSpokenText] = useState("");
   const [isDoneRecording, setIsDoneRecording] = useState(false);
   const [countdown, setCountdown] = useState(null);
+  const { setResult } = useFeedbackStore();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -93,9 +96,14 @@ const RecordInput = ({ interview_id, isAnimatingText }) => {
     }
   }, [countdown]);
 
-  const onSubmit = () => {
-    console.log(interview_id);
-    console.log(spokenText);
+  const onSubmit = async () => {
+    console.log(
+      `Question being asked: ${question} Interview id: ${interview_id}. Spoken text to submit into response: ${spokenText}`
+    );
+    setIsGrading(true);
+    const result = await rateResponse(question, spokenText);
+    setResult(result);
+    router.push("/feedback")
   };
 
   return (
