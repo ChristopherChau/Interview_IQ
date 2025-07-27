@@ -34,7 +34,6 @@ export default function Dropdown({
   name,
   control,
   setOpen,
-  // setSelected,
   open,
 }) {
   const openRoles =

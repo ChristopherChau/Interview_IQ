@@ -18,12 +18,12 @@ import { formSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Dropdown from "./Dropdown";
 import { fetchQuestions, rateResponse } from "./apiFunctions/LambdaFunctions";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../LoadingSpinner";
 import RecordInput from "./RecordInput";
 import { insertInterview } from "./apiFunctions/SubmitResponse";
 import { DROPDOWN_CONFIGS } from "./roles";
 
-export default function InputCard({setQuestion, isAnimatingText, session}) {
+export default function InputCard({setQuestion, isAnimatingText, session, question, setIsGrading}) {
   
   const {
     control,
@@ -109,9 +109,9 @@ export default function InputCard({setQuestion, isAnimatingText, session}) {
     <form onSubmit={handleSubmit(startInterview)}>
       <Card className="w-[450px] min-h-[360px]">
         {isLoading ? (
-          <LoadingSpinner />
-        ) : isFetchedQuestion ? (
-            <RecordInput isAnimatingText={isAnimatingText} interview_id={interviewId}/>
+          <LoadingSpinner text="Loading" />
+        ) : isFetchedQuestion && question ? (
+            <RecordInput isAnimatingText={isAnimatingText} interview_id={interviewId} question={question} setIsGrading={setIsGrading} />
         ) : (
           <>
             <CardHeader>

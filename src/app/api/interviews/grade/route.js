@@ -33,11 +33,12 @@ export async function POST(req) {
       },
       body: JSON.stringify({prompt}),
     });
-    console.log(lambdaResponse);
     const data = await lambdaResponse.json();
     if (!lambdaResponse){
       throw new Error(data.error || "Failed to fetch from Lambda response");
     }
+    console.log("Lambda response from raw endpoint: ", lambdaResponse);
+    console.log("Data.json() from raw endpoint: ", data);
     
     return new Response(JSON.stringify({
       message: "Successful grading response from Lambda",
