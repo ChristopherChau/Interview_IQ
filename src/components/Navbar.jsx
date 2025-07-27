@@ -44,10 +44,10 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="bg-blue-300 flex relative">
+      <div className="flex bg-white relative border-r-2">
         {/* Navbar Content */}
         <div
-          className={`h-screen overflow-y-auto bg-red-300 flex flex-col transition-all duration-300 ${
+          className={`h-screen overflow-y-auto flex flex-col transition-all duration-300 ${
             isCollapsed ? "w-0" : "min-w-[160px] max-w-[225px] w-auto"
           }`}
         >

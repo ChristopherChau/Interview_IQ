@@ -1,4 +1,4 @@
-// app/api/interviews.route.js
+// app/api/interviews/db.route.js
 
 import supabaseClient from "@/lib/supabaseServiceClient";
 
@@ -53,7 +53,8 @@ export async function POST(req) {
   try {
     const { data, error } = await supabaseClient
       .from("interviews")
-      .insert({ user_id: user_id, title: title });
+      .insert({ user_id: user_id, title: title })
+      .select("interview_id");
 
     if (error) {
       throw error;

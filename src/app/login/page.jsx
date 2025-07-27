@@ -3,9 +3,13 @@ import { Auth } from "@supabase/auth-ui-react";
 import Image from "next/image";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import supabase from "@/lib/supabaseAnon";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  
   return (
     <>
       <div className="flex h-screen justify-center">
@@ -31,7 +35,7 @@ export default function LoginPage() {
                 className="cursor-pointer underline"
                 onClick={() => {
                   localStorage.setItem("isGuest", "true");
-                  router.push('/login');
+                  router.push("/");
                 }}
               >
                 Continue as guest
@@ -42,24 +46,22 @@ export default function LoginPage() {
             supabaseClient={supabase}
             providers={["google"]}
             appearance={{ theme: ThemeSupa }}
+            onAuthStateChange={async (event, session) => {
+              console.log("Auth state change:", event, session); // ✅ Debug line
+              if (event === "SIGNED_IN" && session) {
+                const user_id = session.user.id;
+
+                const existingUsers = await getUser(user_id);
+                if (existingUsers.length === 0) {
+                  await insertUser(user_id);
+                }
+
+                router.push("/");
+              }
+            }}
           />
         </div>
       </div>
     </>
   );
-}
-
-{
-  /* <div className="flex-1 flex bg-blue-300 justify-center">
-  <div className="flex flex-col text-left justify-center">
-    <h2>InterviewIQ</h2>
-    <ul>
-      <li>Instant Feedback</li>
-      <li>Elevate Your Interview Game</li>
-      <li>Practice Anytime</li>
-    </ul>
-  </div> */
-}
-{
-  /* </div> */
 }
