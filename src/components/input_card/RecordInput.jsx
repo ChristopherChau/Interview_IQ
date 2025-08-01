@@ -12,9 +12,14 @@ import { rateResponse } from "./apiFunctions/LambdaFunctions";
 import { useRouter } from "next/navigation";
 import { useFeedbackStore } from "@/app/store/feedbackStore";
 
-const RecordInput = ({ interview_id, isAnimatingText, question, setIsGrading }) => {
+const RecordInput = ({
+  interview_id,
+  isAnimatingText,
+  question,
+  setIsGrading,
+}) => {
   const router = useRouter();
-  
+
   const [buttonText, setButtonText] = useState("Record Response");
   const recognitionRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -105,8 +110,8 @@ const RecordInput = ({ interview_id, isAnimatingText, question, setIsGrading }) 
     setResult(result);
     setQuestion(question);
     setResponse(spokenText);
-    router.push("/feedback")
-    console.log(result)
+    router.push("/feedback");
+    console.log(result);
   };
 
   return (
