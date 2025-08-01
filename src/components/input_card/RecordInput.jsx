@@ -21,7 +21,7 @@ const RecordInput = ({ interview_id, isAnimatingText, question, setIsGrading }) 
   const [spokenText, setSpokenText] = useState("");
   const [isDoneRecording, setIsDoneRecording] = useState(false);
   const [countdown, setCountdown] = useState(null);
-  const { setResult } = useFeedbackStore();
+  const { setQuestion, setResponse, setResult } = useFeedbackStore();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -103,7 +103,10 @@ const RecordInput = ({ interview_id, isAnimatingText, question, setIsGrading }) 
     setIsGrading(true);
     const result = await rateResponse(question, spokenText);
     setResult(result);
+    setQuestion(question);
+    setResponse(spokenText);
     router.push("/feedback")
+    console.log(result)
   };
 
   return (

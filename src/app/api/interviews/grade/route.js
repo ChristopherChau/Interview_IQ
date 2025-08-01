@@ -10,17 +10,21 @@ export async function POST(req) {
       )
     );
   }
-  try{
+  try {
     const prompt = `Return a single JSON object with the structure and short notes like below:
     {
-      "communication": <grade>,
-      "clarity": <grade>,
-      "conciseness": <grade>,
-      "overall": <grade>,
+      "structuring": <grade (out of 10)>,
+      "relevance": <grade (out of 10)>,
+      "depth": <grade (out of 10)>,
+      "delivery": <grade (out of 10)>,
+      "correctness": <grade (out of 10)>,
+      "overall": <grade (out of 10)>,
       "notes": {
-        "communication": "Good structure, slight ramble",
-        "clarity": "<notes>",
-        "conciseness": "<notes>",
+        "structuring": <Is the answer logically organized and easy to follow?>,
+        "relevance": <Does it stay on topic>,
+        "depth": <Do they go past the surface level>,
+        "delivery": <Is it concise? Ignore grammer. Minimal filler or vague terms?>,
+        "correctness": <Is their response applicable / accurate? Is their solution valid/sound or is their scenario appropriate>,
         "overall": "<notes>"
       }
     }
@@ -31,25 +35,26 @@ export async function POST(req) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({prompt}),
+      body: JSON.stringify({ prompt }),
     });
     const data = await lambdaResponse.json();
-    if (!lambdaResponse){
+    if (!lambdaResponse) {
       throw new Error(data.error || "Failed to fetch from Lambda response");
     }
     console.log("Lambda response from raw endpoint: ", lambdaResponse);
     console.log("Data.json() from raw endpoint: ", data);
-    
-    return new Response(JSON.stringify({
-      message: "Successful grading response from Lambda",
-      data
-    }, {status: 200}));
-  }
-  catch (err){
-    console.error(
-      "Error trying to grade response from Lambda",
-      err.message
+
+    return new Response(
+      JSON.stringify(
+        {
+          message: "Successful grading response from Lambda",
+          data,
+        },
+        { status: 200 }
+      )
     );
+  } catch (err) {
+    console.error("Error trying to grade response from Lambda", err.message);
     return new Response(
       JSON.stringify({
         error: "Internal Server Error: Failed Grading Lambda function",
