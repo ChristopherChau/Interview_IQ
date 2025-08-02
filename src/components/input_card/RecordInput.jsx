@@ -107,11 +107,12 @@ const RecordInput = ({
     );
     setIsGrading(true);
     const result = await rateResponse(question, spokenText);
-    setResult(result);
+    setResult(result.data.result);
     setQuestion(question);
     setResponse(spokenText);
     router.push("/feedback");
     console.log(result);
+    console.log(result.data);
   };
 
   return (

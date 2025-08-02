@@ -11,24 +11,26 @@ export async function POST(req) {
     );
   }
   try {
-    const prompt = `Return a single JSON object with the structure and short notes like below:
-    {
-      "structuring": <grade (out of 10)>,
-      "relevance": <grade (out of 10)>,
-      "depth": <grade (out of 10)>,
-      "delivery": <grade (out of 10)>,
-      "correctness": <grade (out of 10)>,
-      "overall": <grade (out of 10)>,
-      "notes": {
-        "structuring": <Is the answer logically organized and easy to follow?>,
-        "relevance": <Does it stay on topic>,
-        "depth": <Do they go past the surface level>,
-        "delivery": <Is it concise? Ignore grammer. Minimal filler or vague terms?>,
-        "correctness": <Is their response applicable / accurate? Is their solution valid/sound or is their scenario appropriate>,
-        "overall": "<notes>"
+    const prompt = `Evaluate the response and return ONLY a valid JSON object in the format:
+      {
+        "structuring": <1-10>,
+        "relevance": <1-10>,
+        "depth": <1-10>,
+        "delivery": <1-10>,
+        "correctness": <1-10>,
+        "overall": <1-10>,
+        "notes": {
+          "structuring": "<what was done well or could be improved>",
+          "relevance": "<what was done well or could be improved>",
+          "depth": "<what was done well or could be improved>",
+          "delivery": "<what was done well or could be improved>",
+          "correctness": "<what was done well or could be improved>",
+          "overall": "<brief overall feedback>"
+        }
       }
-    }
-    Only return valid JSON. Do not include any commentary, markdown, or formatting. Grade my response to this question: ${question}. This is my response: ${response}`;
+      No commentary, markdown, or extra text. 
+      Question: ${question}
+      Response: ${response}`;
 
     const lambdaResponse = await fetch(process.env.LAMBDA_BEDROCK_URL, {
       method: "POST",
@@ -41,7 +43,7 @@ export async function POST(req) {
     if (!lambdaResponse) {
       throw new Error(data.error || "Failed to fetch from Lambda response");
     }
-    console.log("Lambda response from raw endpoint: ", lambdaResponse);
+    console.log("Lambda response from raw grading endpoint: ", lambdaResponse);
     console.log("Data.json() from raw endpoint: ", data);
 
     return new Response(

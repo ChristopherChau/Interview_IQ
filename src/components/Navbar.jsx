@@ -46,12 +46,11 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="flex bg-white relative border-r-2">
-      <div className="flex bg-white relative border-r-2">
+      <div className="flex bg-white relative border-r-2 mr-8">
         {/* Navbar Content */}
         <div
           className={`h-screen overflow-y-auto flex flex-col transition-all duration-300 ${
-            isCollapsed ? "w-0" : "min-w-[160px] max-w-[250px] w-auto"
+            isCollapsed ? "w-0" : "min-w-[160px] max-w-[225px] w-auto"
           }`}
         >
           <div className="text-center sticky top-0 z-10 text-4xl font-medium py-6">

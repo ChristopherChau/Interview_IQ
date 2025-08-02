@@ -29,7 +29,6 @@ const FeedbackPage = () => {
       console.log("Result:", result);
     }
   }, [result, question, response]);
-  
 
   return (
     <>
@@ -38,22 +37,21 @@ const FeedbackPage = () => {
           <ProfileMenu />
         </div>
         <div className="flex w-full h-auto mt-24">
-          <p className="flex-[2] text-2xl">
-            {question}
-          </p>
+          <p className="flex-[2] text-2xl">{question}</p>
           <p className="flex-[1]"></p>
         </div>
         <div className="grid w-full h-full mt-10 gap-4 grid-cols-1 md:grid-cols-3">
-          <div className="bg-red-300 col-span-2 w-full">
+          <div className="col-span-2 w-full">
             <Tabs defaultValue="feedback">
-              <TabsList>
+              <TabsList className="">
                 <TabsTrigger value="feedback">
-                  <ReaderIcon/>
+                  <ReaderIcon />
                   Feedback
-                  </TabsTrigger>
+                </TabsTrigger>
               </TabsList>
+              <hr></hr>
               <TabsContent value="feedback">
-                <Details />
+                <Details results={result} />
               </TabsContent>
             </Tabs>
           </div>
