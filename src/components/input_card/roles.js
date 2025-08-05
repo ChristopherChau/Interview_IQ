@@ -3,7 +3,7 @@ export const behavioralFocus = ["Conflict resolution", "Leadership", "Teamwork",
 
 export const technicalRoles = ["Full-stack Engineer", "Frontend Engineer", "Backend Engineer", "DevOps Engineer" , "AI/ML Engineer", "Mobile Developer", "Data Engineer", "Other"]
 
-export const experienceLevels = ["Intern", "Entry-Level", "Mid-Level", "Senior", "Staff/Principal", "Other"]
+export const experienceLevels = ["Intern", "Entry-Level", "Junior / Mid-Level", "Senior", "Staff/Principal", "Other"]
 
 export const DROPDOWN_CONFIGS = {
   behavioral: [

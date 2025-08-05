@@ -2,6 +2,7 @@
 import { HomeIcon, PinLeftIcon } from "@radix-ui/react-icons";
 import PreviousChatCard from "./PreviousChatCard";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -27,6 +28,7 @@ export default function Navbar() {
     {
       icon: <HomeIcon className="size-4" />,
       name: "Interview",
+      href: "/#",
     },
   ];
 
@@ -44,25 +46,29 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="flex bg-white relative border-r-2">
+      <div className="flex bg-white relative border-r-2 mr-8">
         {/* Navbar Content */}
         <div
           className={`h-screen overflow-y-auto flex flex-col transition-all duration-300 ${
             isCollapsed ? "w-0" : "min-w-[160px] max-w-[225px] w-auto"
           }`}
         >
-          <div className="text-center sticky top-0 z-10 text-xl font-semibold py-6">
+          <div className="text-center sticky top-0 z-10 text-4xl font-medium py-6">
             InterviewIQ
           </div>
           {!isCollapsed && (
             <div>
               {navBarItems.map((item, index) => (
-                <div key={index} className="px-2 flex items-center space-x-2">
+                <Link
+                  href={item.href}
+                  key={index}
+                  className="p-2 flex items-center space-x-2 hover:bg-gray-300 rounded-lg"
+                >
                   {item.icon}
                   <span>{item.name}</span>
-                </div>
+                </Link>
               ))}
-              <div className="text-sm mt-6">
+              <div className="text-xl mt-6">
                 <p className="px-2 text-gray-300">Recent</p>
                 {previousChats &&
                   previousChats.length > 0 &&
