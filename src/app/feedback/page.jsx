@@ -5,6 +5,7 @@ import ProfileMenu from "@/components/profilemenu/ProfileMenu";
 import Details from "./Details";
 import { ReaderIcon } from "@radix-ui/react-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ScoreChart from "./ScoreChart";
 
 const FeedbackPage = () => {
   const storeResult = useFeedbackStore((state) => state.result);
@@ -55,7 +56,9 @@ const FeedbackPage = () => {
               </TabsContent>
             </Tabs>
           </div>
-          <div className="bg-blue-300 flex-[1] w-full">Right Side</div>
+          <div className="py-12 px-4 flex-[1] w-full">
+            <ScoreChart results={result} />
+          </div>
         </div>
       </main>
     </>

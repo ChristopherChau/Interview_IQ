@@ -7,7 +7,7 @@ import {
 
 const Details = ({ results }) => {
   return (
-    <div className="">
+    <div>
       <Accordion
         type="single"
         collapsible

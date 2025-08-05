@@ -13,12 +13,12 @@ export async function POST(req) {
   try {
     const prompt = `Evaluate the response and return ONLY a valid JSON object in the format:
       {
-        "structuring": <1-10>,
-        "relevance": <1-10>,
-        "depth": <1-10>,
-        "delivery": <1-10>,
-        "correctness": <1-10>,
-        "overall": <1-10>,
+        "structuring": <1-10> rate it 1-10 so return a number,
+        "relevance": <1-10> rate it 1-10 so return a number,
+        "depth": <1-10> rate it 1-10 so return a number,
+        "delivery": <1-10> rate it 1-10 so return a number,
+        "correctness": <1-10> rate it 1-10 so return a number,
+        "overall": <1-10> rate it 1-10 so return a number,
         "notes": {
           "structuring": "<what was done well or could be improved>",
           "relevance": "<what was done well or could be improved>",
@@ -28,9 +28,9 @@ export async function POST(req) {
           "overall": "<brief overall feedback>"
         }
       }
-      No commentary, markdown, or extra text. 
-      Question: ${question}
-      Response: ${response}`;
+      No commentary, markdown, or extra text. Grade strictly to each criteria
+      "question": "Can you explain the difference between session and cookie based authentication in web development?",
+    "response": "I dont knopw but i think its testing"`;
 
     const lambdaResponse = await fetch(process.env.LAMBDA_BEDROCK_URL, {
       method: "POST",
