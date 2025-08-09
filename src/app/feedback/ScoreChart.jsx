@@ -2,13 +2,14 @@ import { Progress } from "@/components/ui/progress";
 
 const ScoreChart = ({ results }) => {
   const newResults = {
-    overall: 0,
+    overall: results?.overall || 0,
     structuring: 0,
     relevance: 0,
     depth: 0,
     correctness: 0,
     delivery: 0
   };
+  console.log(results)
   if (results && typeof results === "object") {
     for (const [key, value] of Object.entries(results)) {
       if (key === "overall" || key === "notes") continue;
