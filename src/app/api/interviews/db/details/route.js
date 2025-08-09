@@ -56,7 +56,8 @@ export async function POST(req) {
         question: question,
         response: response,
         feedback: feedback,
-      });
+      })
+      .select("interview_id");
     if (error) {
       throw error;
     }
@@ -84,7 +85,7 @@ export async function POST(req) {
 // {
 //   "interview_id": 1,
 //   "question": "Interview question 1",
-//   "response": "Some response", 
+//   "response": "Some response",
 //   "feedback": {
 //       "clarity": 5,
 //       "overall": 5

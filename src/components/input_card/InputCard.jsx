@@ -23,8 +23,7 @@ import RecordInput from "./RecordInput";
 import { insertInterview } from "./apiFunctions/SubmitResponse";
 import { DROPDOWN_CONFIGS } from "./roles";
 
-export default function InputCard({setQuestion, isAnimatingText, session, question, setIsGrading}) {
-  
+export default function InputCard({setQuestion, isAnimatingText, session, question, setIsGrading}) {  
   const {
     control,
     handleSubmit,

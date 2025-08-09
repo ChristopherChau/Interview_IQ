@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
+  localStorage.setItem("isGuest", "false");
 
   
   return (
@@ -50,6 +51,7 @@ export default function LoginPage() {
               console.log("Auth state change:", event, session); // ✅ Debug line
               if (event === "SIGNED_IN" && session) {
                 const user_id = session.user.id;
+                localStorage.setItem("isGuest", "false")
 
                 const existingUsers = await getUser(user_id);
                 if (existingUsers.length === 0) {

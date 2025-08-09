@@ -9,7 +9,6 @@ const ScoreChart = ({ results }) => {
     correctness: 0,
     delivery: 0
   };
-  console.log(results)
   if (results && typeof results === "object") {
     for (const [key, value] of Object.entries(results)) {
       if (key === "overall" || key === "notes") continue;
