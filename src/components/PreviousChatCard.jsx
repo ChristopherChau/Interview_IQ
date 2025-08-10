@@ -6,7 +6,7 @@ export default function PreviousChatCard({ title, link }) {
   return (
     <Link href={link}>
       <div className="px-2 py-1 text-left rounded-lg hover:bg-gray-200 focus:outline-none cursor-pointer">
-        <p className="truncate overflow-hidden whitespace-nowrap">{title}</p>
+        <p className="truncate overflow-hidden text-base whitespace-nowrap">{title}</p>
       </div>
     </Link>
   );

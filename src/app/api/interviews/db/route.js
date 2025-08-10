@@ -1,8 +1,8 @@
-// app/api/interviews/db.route.js
+// app/api/interviews/db/route.js
 
 import supabaseClient from "@/lib/supabaseServiceClient";
 
-// This will get all interview ids/titles associated with current user
+// This will get last 5 interview ids/titles associated with current user
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const user_id = searchParams.get("user_id");
@@ -19,7 +19,9 @@ export async function GET(req) {
     const { data, error } = await supabaseClient
       .from("interviews")
       .select("interview_id, title")
-      .eq("user_id", user_id);
+      .eq("user_id", user_id)
+      .order('interview_id', {ascending: false })
+      .limit(5)
 
     if (error) {
       throw error;

@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./styles/globals.css";
 import AuthGuard from "@/components/AuthGuard";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 import { usePathname } from "next/navigation";
+
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -23,6 +24,7 @@ import { usePathname } from "next/navigation";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
+  
 
   const isLoginPage = pathname == "/login";
   return (

@@ -1,32 +1,39 @@
 "use client";
 import { HomeIcon, PinLeftIcon } from "@radix-ui/react-icons";
-import PreviousChatCard from "./PreviousChatCard";
+import PreviousChatCard from "../PreviousChatCard";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import supabaseAnon from "@/lib/supabaseAnon";
+import LoadingSpinner from "../LoadingSpinner";
+import { fetchRecentInterviews } from "./utils";
 
 export default function Navbar() {
+  // const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    const isGuest = localStorage.getItem("isGuest");
+    if (isGuest == "false") {
+      setIsLoading(true);
+      (async () => {
+        const {
+          data: { user },
+        } = await supabaseAnon.auth.getUser();
+        const recentInterviews = await fetchRecentInterviews(user.id);
+        console.log(recentInterviews);
+        setPreviousChats(recentInterviews);
+        setIsLoading(false);
+      })();
+    }
+  }, []);
+
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [previousChats, setPreviousChats] = useState([]);
 
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
-  const previousChats = [
-    {
-      chat_name: "Interview 1dsadsadsadasdasdsa",
-      chat_id: "/chat/1",
-    },
-    {
-      chat_name: "Interview 2",
-      chat_id: "/chat/2",
-    },
-    {
-      chat_name: "Interview 3",
-      chat_id: "/chat/3",
-    },
-  ];
-
   const navBarItems = [
     {
-      icon: <HomeIcon className="size-4" />,
+      icon: <HomeIcon className="size-5" />,
       name: "Interview",
       href: "/#",
     },
@@ -54,9 +61,7 @@ export default function Navbar() {
           }`}
         >
           <div className="text-center sticky top-0 z-10 text-4xl font-medium py-6">
-            <Link href={"/#"}>
-            InterviewIQ
-            </Link>
+            <Link href={"/#"}>InterviewIQ</Link>
           </div>
           {!isCollapsed && (
             <div>
@@ -64,23 +69,35 @@ export default function Navbar() {
                 <Link
                   href={item.href}
                   key={index}
-                  className="p-2 flex items-center space-x-2 hover:bg-gray-300 rounded-lg"
+                  className="p-2 flex items-center space-x-2 hover:bg-gray-300 rounded-lg text-xl"
                 >
-                  {item.icon}
+                  <span>{item.icon}</span>
                   <span>{item.name}</span>
                 </Link>
               ))}
               <div className="text-xl mt-6">
-                <p className="px-2 text-gray-300">Recent</p>
-                {previousChats &&
+                <p className="px-2 text-gray-400">Recent</p>
+                {isLoading ? (
+                  <div className="pt-6">
+                    <LoadingSpinner showDots={false} />
+                  </div>
+                ) : previousChats.length == 0 ? (
+                  <div className="px-2 py-1 text-left">
+                    <p className="truncate overflow-hidden text-base whitespace-nowrap">
+                      No previous interviews
+                    </p>
+                  </div>
+                ) : (
+                  previousChats &&
                   previousChats.length > 0 &&
                   previousChats.map((value, index) => (
                     <PreviousChatCard
-                      link={value.chat_id}
-                      title={value.chat_name}
+                      link={`/feedback/${value.interview_id}`}
+                      title={value.title}
                       key={index}
                     />
-                  ))}
+                  ))
+                )}
               </div>
             </div>
           )}
