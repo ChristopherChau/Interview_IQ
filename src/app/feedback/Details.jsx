@@ -6,7 +6,6 @@ import {
 } from "@/components/ui/accordion";
 
 const Details = ({ results }) => {
-  console.log("Details results:", results); 
   
   return (
     <div>

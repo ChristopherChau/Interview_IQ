@@ -117,7 +117,7 @@ const RecordInput = ({
       console.log("Inserted details into DB ")
       const detailsResult = await insertDetails(interview_id, question, spokenText, result.data.result)
     }
-    router.push("/feedback");
+    router.push(`/feedback/${interview_id}`);
   };
 
   return (
