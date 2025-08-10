@@ -110,8 +110,14 @@ const RecordInput = ({
     setResult(result.data);
     setQuestion(question);
     setResponse(spokenText);
-    router.push("/feedback");
-    console.log(result.data);
+    console.log(result.data.result);
+    const isGuest = localStorage.getItem("isGuest");
+    console.log("Is guest: ", isGuest) 
+    if (isGuest == "false"){ //Need to check string literal because the localStorage stored it as string
+      console.log("Inserted details into DB ")
+      const detailsResult = await insertDetails(interview_id, question, spokenText, result.data.result)
+    }
+    router.push(`/feedback/${interview_id}`);
   };
 
   return (

@@ -2,7 +2,7 @@ import { Progress } from "@/components/ui/progress";
 
 const ScoreChart = ({ results }) => {
   const newResults = {
-    overall: 0,
+    overall: results?.overall || 0,
     structuring: 0,
     relevance: 0,
     depth: 0,

@@ -54,7 +54,9 @@ export default function Navbar() {
           }`}
         >
           <div className="text-center sticky top-0 z-10 text-4xl font-medium py-6">
+            <Link href={"/#"}>
             InterviewIQ
+            </Link>
           </div>
           {!isCollapsed && (
             <div>

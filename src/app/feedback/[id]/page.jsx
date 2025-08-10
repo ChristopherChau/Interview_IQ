@@ -1,11 +1,11 @@
 "use client";
-import { useFeedbackStore } from "../store/feedbackStore";
+import { useFeedbackStore } from "../../store/feedbackStore";
 import { useState, useEffect } from "react";
 import ProfileMenu from "@/components/profilemenu/ProfileMenu";
-import Details from "./Details";
+import Details from "../Details";
 import { ReaderIcon } from "@radix-ui/react-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ScoreChart from "./ScoreChart";
+import ScoreChart from "../ScoreChart";
 
 const FeedbackPage = () => {
   const storeResult = useFeedbackStore((state) => state.result);
@@ -22,14 +22,14 @@ const FeedbackPage = () => {
     setResponse(storeResponse);
   }, [storeResult, storeQuestion, storeResponse]);
 
-  useEffect(() => {
-    if (result || question || response) {
-      console.log("Updated values:");
-      console.log("Question:", question);
-      console.log("Response:", response);
-      console.log("Result:", result);
-    }
-  }, [result, question, response]);
+  // useEffect(() => {
+  //   if (result || question || response) {
+  //     console.log("Updated values:");
+  //     console.log("Question:", question);
+  //     console.log("Response:", response);
+  //     console.log("Result:", result);
+  //   }
+  // }, [result, question, response]);
 
   return (
     <>
