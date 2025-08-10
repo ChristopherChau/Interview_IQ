@@ -6,10 +6,16 @@ import Link from "next/link";
 import supabaseAnon from "@/lib/supabaseAnon";
 import LoadingSpinner from "../LoadingSpinner";
 import { fetchRecentInterviews } from "./utils";
+import { useNavStore } from '@/app/store/navRefreshStore';
+
 
 export default function Navbar() {
-  // const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [previousChats, setPreviousChats] = useState([]);
+  
+  const refreshKey = useNavStore((s) => s.refreshKey);
+  
   useEffect(() => {
     const isGuest = localStorage.getItem("isGuest");
     if (isGuest == "false") {
@@ -20,7 +26,6 @@ export default function Navbar() {
             data: { user },
           } = await supabaseAnon.auth.getUser();
           const recentInterviews = await fetchRecentInterviews(user.id);
-          console.log(recentInterviews);
           setPreviousChats(recentInterviews);
           setIsLoading(false);
         } catch (err) {
@@ -28,10 +33,7 @@ export default function Navbar() {
         }
       })();
     }
-  }, []);
-
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [previousChats, setPreviousChats] = useState([]);
+  }, [refreshKey, supabaseAnon]);
 
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 

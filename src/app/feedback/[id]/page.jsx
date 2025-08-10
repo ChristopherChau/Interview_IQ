@@ -55,7 +55,7 @@ const FeedbackPage = () => {
           <ProfileMenu />
         </div>
         <div className="flex w-full h-auto mt-24">
-          <p className="flex-[2] text-2xl">{question || "No interview found"}</p>
+          <p className="flex-[2] text-2xl">{question || "No response given or no interview found"}</p>
           <p className="flex-[1]"></p>
         </div>
         <div className="grid w-full h-full mt-10 gap-4 grid-cols-1 md:grid-cols-3">

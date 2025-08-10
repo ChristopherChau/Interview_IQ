@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import { insertDetails } from "./apiFunctions/SubmitResponse";
 import { rateResponse } from "./apiFunctions/LambdaFunctions";
-import { useRouter } from "next/navigation";
 import { useFeedbackStore } from "@/app/store/feedbackStore";
+import { useNavStore } from '@/app/store/navRefreshStore';
+import { useRouter } from "next/navigation";
+
 
 const RecordInput = ({
   interview_id,
@@ -18,8 +20,6 @@ const RecordInput = ({
   question,
   setIsGrading,
 }) => {
-  const router = useRouter();
-
   const [buttonText, setButtonText] = useState("Record Response");
   const recognitionRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -27,6 +27,8 @@ const RecordInput = ({
   const [isDoneRecording, setIsDoneRecording] = useState(false);
   const [countdown, setCountdown] = useState(null);
   const { setQuestion, setResponse, setResult } = useFeedbackStore();
+  const router = useRouter();
+  const bumpNavbar = useNavStore((s) => s.bump);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -106,16 +108,19 @@ const RecordInput = ({
       `Question being asked: ${question} Interview id: ${interview_id}. Spoken text to submit into response: ${spokenText}`
     );
     setIsGrading(true);
-    const result = await rateResponse(question, spokenText);
-    setResult(result.data);
-    setQuestion(question);
-    setResponse(spokenText);
-    console.log(result.data.result);
-    const isGuest = localStorage.getItem("isGuest");
-    console.log("Is guest: ", isGuest) 
-    if (isGuest == "false"){ //Need to check string literal because the localStorage stored it as string
-      console.log("Inserted details into DB ")
-      const detailsResult = await insertDetails(interview_id, question, spokenText, result.data.result)
+    if (spokenText){
+      const result = await rateResponse(question, spokenText);
+      setResult(result.data);
+      setQuestion(question);
+      setResponse(spokenText);
+      console.log(result.data.result);
+      const isGuest = localStorage.getItem("isGuest");
+      console.log("Is guest: ", isGuest) 
+      if (isGuest == "false"){ //Need to check string literal because the localStorage stored it as string
+        console.log("Inserted details into DB ")
+        const detailsResult = await insertDetails(interview_id, question, spokenText, result.data.result)
+        bumpNavbar();
+      }
     }
     router.push(`/feedback/${interview_id}`);
   };
