@@ -18,7 +18,7 @@ export async function GET(req) {
   try {
     const { data, error } = await supabaseClient
       .from("interviews")
-      .select("interview_id, title")
+      .select("interview_id, title, interview_details!inner()")
       .eq("user_id", user_id)
       .order('interview_id', {ascending: false })
       .limit(5)

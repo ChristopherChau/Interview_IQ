@@ -6,21 +6,38 @@ import Details from "../Details";
 import { ReaderIcon } from "@radix-ui/react-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ScoreChart from "../ScoreChart";
+import { useParams } from "next/navigation"
+import getInterviewDetails from "./utils";
 
 const FeedbackPage = () => {
-  const storeResult = useFeedbackStore((state) => state.result);
-  const storeQuestion = useFeedbackStore((state) => state.question);
-  const storeResponse = useFeedbackStore((state) => state.response);
-
+  const { id } = useParams();
+  // const storeResult = useFeedbackStore((state) => state.result);
+  // const storeQuestion = useFeedbackStore((state) => state.question);
+  // const storeResponse = useFeedbackStore((state) => state.response);
   const [result, setResult] = useState(null);
   const [question, setQuestion] = useState(null);
-  const [response, setResponse] = useState(null);
 
   useEffect(() => {
-    setResult(storeResult);
-    setQuestion(storeQuestion);
-    setResponse(storeResponse);
-  }, [storeResult, storeQuestion, storeResponse]);
+    (async () => {
+      try{
+        console.log(id);
+        const result = await getInterviewDetails(id);
+        console.log(result)
+        setResult(result.feedback);
+        setQuestion(result.question)
+
+      } catch (err) {
+        console.error(`Error trying to get details for ${id}: `, err);
+      }
+
+    })();
+  }, [])
+
+  // useEffect(() => {
+  //   setResult(storeResult);
+  //   setQuestion(storeQuestion);
+  //   setResponse(storeResponse);
+  // }, [storeResult, storeQuestion, storeResponse]);
 
   // useEffect(() => {
   //   if (result || question || response) {
@@ -38,7 +55,7 @@ const FeedbackPage = () => {
           <ProfileMenu />
         </div>
         <div className="flex w-full h-auto mt-24">
-          <p className="flex-[2] text-2xl">{question}</p>
+          <p className="flex-[2] text-2xl">{question || "No interview found"}</p>
           <p className="flex-[1]"></p>
         </div>
         <div className="grid w-full h-full mt-10 gap-4 grid-cols-1 md:grid-cols-3">
@@ -57,7 +74,7 @@ const FeedbackPage = () => {
             </Tabs>
           </div>
           <div className="py-12 px-4 flex-[1] w-full">
-            <ScoreChart results={result?.result} />
+            <ScoreChart results={result} />
           </div>
         </div>
       </main>

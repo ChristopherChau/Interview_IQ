@@ -1,4 +1,4 @@
-// app/api/interviews/details.route.js
+// app/api/interviews/db/details.route.js
 
 import supabaseClient from "@/lib/supabaseServiceClient";
 
@@ -15,7 +15,8 @@ export async function GET(req) {
     const { data, error } = await supabaseClient
       .from("interview_details")
       .select()
-      .eq("interview_id", interview_id);
+      .eq("interview_id", interview_id)
+      .single();
 
     if (error) {
       throw error;

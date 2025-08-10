@@ -57,7 +57,7 @@ const FeedbackPage = () => {
             </Tabs>
           </div>
           <div className="py-12 px-4 flex-[1] w-full">
-            <ScoreChart results={result?.result} />
+            <ScoreChart results={result} />
           </div>
         </div>
       </main>

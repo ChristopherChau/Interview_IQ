@@ -15,13 +15,17 @@ export default function Navbar() {
     if (isGuest == "false") {
       setIsLoading(true);
       (async () => {
-        const {
-          data: { user },
-        } = await supabaseAnon.auth.getUser();
-        const recentInterviews = await fetchRecentInterviews(user.id);
-        console.log(recentInterviews);
-        setPreviousChats(recentInterviews);
-        setIsLoading(false);
+        try {
+          const {
+            data: { user },
+          } = await supabaseAnon.auth.getUser();
+          const recentInterviews = await fetchRecentInterviews(user.id);
+          console.log(recentInterviews);
+          setPreviousChats(recentInterviews);
+          setIsLoading(false);
+        } catch (err) {
+          console.error("Error getting recent interviews: ", err)
+        }
       })();
     }
   }, []);
