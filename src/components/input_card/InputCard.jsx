@@ -20,10 +20,15 @@ import Dropdown from "./Dropdown";
 import { fetchQuestions, rateResponse } from "./apiFunctions/LambdaFunctions";
 import LoadingSpinner from "../LoadingSpinner";
 import RecordInput from "./RecordInput";
-import { insertInterview } from "./apiFunctions/SubmitResponse";
 import { DROPDOWN_CONFIGS } from "./roles";
 
-export default function InputCard({setQuestion, isAnimatingText, session, question, setIsGrading}) {  
+export default function InputCard({
+  setQuestion,
+  isAnimatingText,
+  session,
+  question,
+  setIsGrading,
+}) {
   const {
     control,
     handleSubmit,
@@ -46,7 +51,8 @@ export default function InputCard({setQuestion, isAnimatingText, session, questi
   const [openDropdown, setOpenDropdown] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchedQuestion, setIsFetchedQuestion] = useState(false);
-  const [interviewId, setInterviewId] = useState("")
+  const [questionTitle, setQuestionTitle] = useState("");
+
   useEffect(() => {
     setValue("tab", selectedTab);
   }, [selectedTab]);
@@ -91,17 +97,16 @@ export default function InputCard({setQuestion, isAnimatingText, session, questi
       role = data.technical_role;
       experience = data.technical_experience;
     }
-    const questionResponse = await fetchQuestions(type, role, experience, focus);
+    const questionResponse = await fetchQuestions(
+      type,
+      role,
+      experience,
+      focus
+    );
     setIsLoading(false);
     setIsFetchedQuestion(true);
     setQuestion(questionResponse.question);
-
-    if (session){
-      const user_id = session.user.id;
-      const insertInterviewResponse = await insertInterview(user_id, questionResponse.title);
-      console.log(insertInterviewResponse.data[0].interview_id);
-      setInterviewId(insertInterviewResponse.data[0].interview_id);
-    }
+    setQuestionTitle(questionResponse.title)
   };
 
   return (
@@ -110,7 +115,13 @@ export default function InputCard({setQuestion, isAnimatingText, session, questi
         {isLoading ? (
           <LoadingSpinner text="Loading" />
         ) : isFetchedQuestion && question ? (
-            <RecordInput isAnimatingText={isAnimatingText} interview_id={interviewId} question={question} setIsGrading={setIsGrading} />
+          <RecordInput
+            session={session}
+            questionTitle={questionTitle}
+            isAnimatingText={isAnimatingText}
+            question={question}
+            setIsGrading={setIsGrading}
+          />
         ) : (
           <>
             <CardHeader>

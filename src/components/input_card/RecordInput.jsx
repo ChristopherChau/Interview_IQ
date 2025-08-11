@@ -10,15 +10,16 @@ import { useState, useEffect, useRef } from "react";
 import { insertDetails } from "./apiFunctions/SubmitResponse";
 import { rateResponse } from "./apiFunctions/LambdaFunctions";
 import { useFeedbackStore } from "@/app/store/feedbackStore";
-import { useNavStore } from '@/app/store/navRefreshStore';
+import { useNavStore } from "@/app/store/navRefreshStore";
 import { useRouter } from "next/navigation";
-
+import { insertInterview } from "./apiFunctions/SubmitResponse";
 
 const RecordInput = ({
-  interview_id,
+  session,
   isAnimatingText,
   question,
   setIsGrading,
+  questionTitle,
 }) => {
   const [buttonText, setButtonText] = useState("Record Response");
   const recognitionRef = useRef(null);
@@ -26,6 +27,8 @@ const RecordInput = ({
   const [spokenText, setSpokenText] = useState("");
   const [isDoneRecording, setIsDoneRecording] = useState(false);
   const [countdown, setCountdown] = useState(null);
+  // const [interviewId, setInterviewId] = useState("");
+
   const { setQuestion, setResponse, setResult } = useFeedbackStore();
   const router = useRouter();
   const bumpNavbar = useNavStore((s) => s.bump);
@@ -104,25 +107,39 @@ const RecordInput = ({
   }, [countdown]);
 
   const onSubmit = async () => {
-    console.log(
-      `Question being asked: ${question} Interview id: ${interview_id}. Spoken text to submit into response: ${spokenText}`
+    if (!session) {
+      return;
+    }
+    const user_id = session.user.id;
+    const insertInterviewResponse = await insertInterview(
+      user_id,
+      questionTitle
     );
+    console.log(insertInterviewResponse.data[0].interview_id);
+    // setInterviewId(insertInterviewResponse.data[0].interview_id);
+
     setIsGrading(true);
-    if (spokenText){
+    if (spokenText) {
       const result = await rateResponse(question, spokenText);
       setResult(result.data);
       setQuestion(question);
       setResponse(spokenText);
       console.log(result.data.result);
       const isGuest = localStorage.getItem("isGuest");
-      console.log("Is guest: ", isGuest) 
-      if (isGuest == "false"){ //Need to check string literal because the localStorage stored it as string
-        console.log("Inserted details into DB ")
-        const detailsResult = await insertDetails(interview_id, question, spokenText, result.data.result)
+      console.log("Is guest: ", isGuest);
+      if (isGuest == "false") {
+        //Need to check string literal because the localStorage stored it as string
+        console.log("Inserted details into DB ");
+        const detailsResult = await insertDetails(
+          insertInterviewResponse.data[0].interview_id,
+          question,
+          spokenText,
+          result.data.result
+        );
         bumpNavbar();
       }
     }
-    router.push(`/feedback/${interview_id}`);
+    router.push(`/feedback/${insertInterviewResponse.data[0].interview_id}`);
   };
 
   return (
