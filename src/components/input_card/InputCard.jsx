@@ -17,10 +17,11 @@ import { useState, useEffect } from "react";
 import { formSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Dropdown from "./Dropdown";
-import { fetchQuestions, rateResponse } from "./apiFunctions/LambdaFunctions";
+import { fetchQuestions } from "./apiFunctions/LambdaFunctions";
 import LoadingSpinner from "../LoadingSpinner";
 import RecordInput from "./RecordInput";
 import { DROPDOWN_CONFIGS } from "./roles";
+import { fetchRecentInterviews } from "../Navbar/utils";
 
 export default function InputCard({
   setQuestion,
@@ -86,6 +87,7 @@ export default function InputCard({
   const startInterview = async (data) => {
     setIsLoading(true);
     let type, role, experience, focus;
+    let previousChats = [];
 
     if (data.tab === "behavioral") {
       type = "behavioral";
@@ -97,16 +99,28 @@ export default function InputCard({
       role = data.technical_role;
       experience = data.technical_experience;
     }
+    if (session) {
+      const recentInterviews = await fetchRecentInterviews(session.user.id);
+      if (recentInterviews) {
+        console.log(recentInterviews);
+        recentInterviews.forEach((object, index) => {
+          previousChats.push(object.title);
+        });
+      }
+    }
+    console.log("Previous chats: ", previousChats);
+
     const questionResponse = await fetchQuestions(
       type,
       role,
       experience,
-      focus
+      focus,
+      previousChats
     );
     setIsLoading(false);
     setIsFetchedQuestion(true);
     setQuestion(questionResponse.question);
-    setQuestionTitle(questionResponse.title)
+    setQuestionTitle(questionResponse.title);
   };
 
   return (

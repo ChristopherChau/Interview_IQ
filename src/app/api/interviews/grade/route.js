@@ -1,5 +1,7 @@
 export async function POST(req) {
   const { question, response } = await req.json();
+  console.log("Question: ", question)
+  console.log("Response: ", response)
   if (!question || !response) {
     return new Response(
       JSON.stringify(
@@ -29,8 +31,8 @@ export async function POST(req) {
         }
       }
       No commentary, markdown, or extra text. Grade strictly to each criteria
-      "question": "Can you explain the difference between session and cookie based authentication in web development?",
-    "response": "I dont knopw but i think its testing"`;
+      "question": ${question},
+    "response": ${response}`;
 
     const lambdaResponse = await fetch(process.env.LAMBDA_BEDROCK_URL, {
       method: "POST",

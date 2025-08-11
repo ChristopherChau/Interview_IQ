@@ -79,7 +79,7 @@ export default function Navbar() {
             isCollapsed ? "w-0" : "min-w-[160px] max-w-[225px] w-auto"
           }`}
         >
-          <div className="text-center sticky top-0 z-10 text-4xl font-medium py-6">
+          <div className="text-center sticky top-0 z-10 text-4xl font-medium px-4 py-6">
             <Link href="/" onClick={handleHomeClick}>InterviewIQ</Link>
           </div>
           {!isCollapsed && (
