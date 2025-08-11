@@ -7,6 +7,7 @@ import supabaseAnon from "@/lib/supabaseAnon";
 import LoadingSpinner from "../LoadingSpinner";
 import { fetchRecentInterviews } from "./utils";
 import { useNavStore } from '@/app/store/navRefreshStore';
+import { useRouter, usePathname } from "next/navigation";
 
 
 export default function Navbar() {
@@ -15,6 +16,18 @@ export default function Navbar() {
   const [previousChats, setPreviousChats] = useState([]);
   
   const refreshKey = useNavStore((s) => s.refreshKey);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleHomeClick = (e) => {
+    e.preventDefault();
+    if (pathname === "/"){
+      window.location.reload();
+    }
+    else{
+      router.push("/");
+    }
+  }
   
   useEffect(() => {
     const isGuest = localStorage.getItem("isGuest");
@@ -41,12 +54,12 @@ export default function Navbar() {
     {
       icon: <HomeIcon className="size-5" />,
       name: "Interview",
-      href: "/#",
+      href: "/",
     },
   ];
 
   useEffect(() => {
-    const handleResize = () => {
+    const handleResize = () => { 
       if (window.innerWidth < 640) {
         setIsCollapsed(true);
       }
@@ -67,7 +80,7 @@ export default function Navbar() {
           }`}
         >
           <div className="text-center sticky top-0 z-10 text-4xl font-medium py-6">
-            <Link href={"/#"}>InterviewIQ</Link>
+            <Link href="/" onClick={handleHomeClick}>InterviewIQ</Link>
           </div>
           {!isCollapsed && (
             <div>
@@ -76,7 +89,8 @@ export default function Navbar() {
                   href={item.href}
                   key={index}
                   className="p-2 flex items-center space-x-2 hover:bg-gray-300 rounded-lg text-xl"
-                >
+                  onClick={item.name === "Interview" ? handleHomeClick : undefined}
+                  >
                   <span>{item.icon}</span>
                   <span>{item.name}</span>
                 </Link>
