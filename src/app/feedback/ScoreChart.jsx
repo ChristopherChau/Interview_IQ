@@ -1,25 +1,20 @@
+"use client"
 import { Progress } from "@/components/ui/progress";
 
 const ScoreChart = ({ results }) => {
-  const newResults = {
-    overall: results?.overall || 0,
-    structuring: 0,
-    relevance: 0,
-    depth: 0,
-    correctness: 0,
-    delivery: 0
-  };
-  if (results && typeof results === "object") {
-    for (const [key, value] of Object.entries(results)) {
-      if (key === "overall" || key === "notes") continue;
-      newResults[key] = value;
-    }
-  }
+  const r = results?.result ?? results ?? {};
+
+  const keys = ["overall", "structuring", "relevance", "depth", "correctness", "delivery"];
+  const scores = Object.fromEntries(
+    keys.map((k) => [k, Number(r?.[k]) || 0])
+  );
+
 
   return (
     <div className="flex flex-col gap-6">
-      {newResults &&
-        Object.entries(newResults).map(([label, value]) => {
+      {keys &&
+        keys.map((label) => {
+          const value = scores[label];
           return (
             <div key={label}>
               <div className="flex justify-between text-sm font-medium text-gray-700">

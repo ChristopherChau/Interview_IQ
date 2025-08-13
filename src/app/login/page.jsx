@@ -4,7 +4,6 @@ import Image from "next/image";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import supabase from "@/lib/supabaseAnon";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -48,7 +47,6 @@ export default function LoginPage() {
             providers={["google"]}
             appearance={{ theme: ThemeSupa }}
             onAuthStateChange={async (event, session) => {
-              console.log("Auth state change:", event, session); // ✅ Debug line
               if (event === "SIGNED_IN" && session) {
                 const user_id = session.user.id;
                 localStorage.setItem("isGuest", "false")

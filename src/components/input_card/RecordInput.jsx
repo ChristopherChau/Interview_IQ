@@ -6,27 +6,33 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { useState, useEffect, useRef } from "react";
 import { insertDetails } from "./apiFunctions/SubmitResponse";
 import { rateResponse } from "./apiFunctions/LambdaFunctions";
-import { useRouter } from "next/navigation";
 import { useFeedbackStore } from "@/app/store/feedbackStore";
+import { useNavStore } from "@/app/store/navRefreshStore";
+import { useRouter } from "next/navigation";
+import { insertInterview } from "./apiFunctions/SubmitResponse";
 
 const RecordInput = ({
-  interview_id,
+  session,
   isAnimatingText,
   question,
   setIsGrading,
+  questionTitle,
 }) => {
-  const router = useRouter();
-
   const [buttonText, setButtonText] = useState("Record Response");
   const recognitionRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
   const [spokenText, setSpokenText] = useState("");
   const [isDoneRecording, setIsDoneRecording] = useState(false);
   const [countdown, setCountdown] = useState(null);
+  // const [interviewId, setInterviewId] = useState("");
+
   const { setQuestion, setResponse, setResult } = useFeedbackStore();
+  const router = useRouter();
+  const bumpNavbar = useNavStore((s) => s.bump);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -50,16 +56,8 @@ const RecordInput = ({
         };
 
         recognition.onerror = (event) => {
-          console.error("Speech recognition error:", event.error);
+          
           setIsRecording(false);
-        };
-
-        recognition.onstart = () => {
-          console.log("Speech recognition started");
-        };
-
-        recognition.onend = () => {
-          console.log("Speech recognition ended");
         };
 
         recognitionRef.current = recognition;
@@ -72,7 +70,6 @@ const RecordInput = ({
   const recordResponse = () => {
     if (isRecording) {
       recognitionRef.current?.stop();
-      console.log(spokenText);
       setIsDoneRecording(true);
       setIsRecording(false);
       setButtonText("Submit Response");
@@ -102,22 +99,55 @@ const RecordInput = ({
   }, [countdown]);
 
   const onSubmit = async () => {
-    console.log(
-      `Question being asked: ${question} Interview id: ${interview_id}. Spoken text to submit into response: ${spokenText}`
-    );
-    setIsGrading(true);
-    const result = await rateResponse(question, spokenText);
-    setResult(result.data);
-    setQuestion(question);
-    setResponse(spokenText);
-    console.log(result.data.result);
-    const isGuest = localStorage.getItem("isGuest");
-    console.log("Is guest: ", isGuest) 
-    if (isGuest == "false"){ //Need to check string literal because the localStorage stored it as string
-      console.log("Inserted details into DB ")
-      const detailsResult = await insertDetails(interview_id, question, spokenText, result.data.result)
+    try {
+      let result;
+      const isGuest = localStorage.getItem("isGuest") === "true";
+      if (!spokenText) {
+        setSpokenText("No response");
+        result = {};
+      } else {
+        setIsGrading(true);
+        const apiResult = await rateResponse(question, spokenText);
+        result = apiResult.data;
+      }
+      setResult(result);
+      setQuestion(question);
+      setResponse(spokenText);
+      if (isGuest) {
+        toast.info("Graded as guest", { description: "Results aren't saved." });
+        router.push("/feedback");
+        return;
+      }
+
+      const user_id = session.user.id;
+      const insertInterviewResponse = await insertInterview(
+        user_id,
+        questionTitle
+      );
+
+      const detailsResult = await insertDetails(
+        insertInterviewResponse.data[0].interview_id,
+        question,
+        spokenText,
+        result
+      );
+      bumpNavbar();
+      router.push(`/feedback/${insertInterviewResponse.data[0].interview_id}`);
+    } catch (err) {
+      const status = err?.status ?? err?.code ?? "";
+      const message =
+        err?.details?.error ||
+        err?.message ||
+        "Something went wrong saving your interview.";
+
+      toast.error("Save failed", {
+        description: status ? `${message} (code: ${status})` : message,
+        action: {
+          label: "Retry",
+          onClick: () => onSubmit(),
+        },
+      });
     }
-    router.push(`/feedback/${interview_id}`);
   };
 
   return (

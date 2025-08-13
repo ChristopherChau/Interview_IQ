@@ -1,9 +1,9 @@
-export async function fetchQuestions(type, role, experience, focus) {
+export async function fetchQuestions(type, role, experience, focus, previousChats) {
   try {
     const response = await fetch("/api/interviews/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, role, experience, focus }),
+      body: JSON.stringify({ type, role, experience, focus, previousChats }),
     });
     if (!response.ok) {
       throw new Error(
@@ -13,7 +13,6 @@ export async function fetchQuestions(type, role, experience, focus) {
 
     const lambdaResponse = await response.json();
     let result = lambdaResponse.data.result;
-    console.log(lambdaResponse);
 
     if (typeof result === "string") {
       // Try to match ```json ... ```

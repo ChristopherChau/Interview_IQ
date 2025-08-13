@@ -18,7 +18,7 @@ const Details = ({ results }) => {
         <AccordionItem value="item-1">
           <AccordionTrigger>Structuring and Clarity</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
-            <p>{results?.result?.notes?.structuring ?? "No feedback available"}</p>
+            <p>{results?.notes?.structuring ?? "No feedback available"}</p>
           </AccordionContent>
         </AccordionItem>
 
@@ -26,7 +26,7 @@ const Details = ({ results }) => {
           <AccordionTrigger>Relevance and Focus</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <p>
-              {results?.result?.notes?.relevance ?? "No feedback available"}
+              {results?.notes?.relevance ?? "No feedback available"}
             </p>
           </AccordionContent>
         </AccordionItem>
@@ -35,7 +35,7 @@ const Details = ({ results }) => {
           <AccordionTrigger>Depth of Understanding</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <p>
-              {results?.result?.notes?.depth ?? "No feedback available"}
+              {results?.notes?.depth ?? "No feedback available"}
             </p>
           </AccordionContent>
         </AccordionItem>
@@ -44,7 +44,7 @@ const Details = ({ results }) => {
           <AccordionTrigger>Response Delivery</AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <p>
-              {results?.result?.notes?.delivery ?? "No feedback available"}
+              {results?.notes?.delivery ?? "No feedback available"}
             </p>
           </AccordionContent>
         </AccordionItem>
@@ -53,7 +53,7 @@ const Details = ({ results }) => {
           <AccordionTrigger>Correctness / Applicability </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <p>
-              {results?.result?.notes?.correctness ?? "No feedback available"}
+              {results?.notes?.correctness ?? "No feedback available"}
             </p>
           </AccordionContent>
         </AccordionItem>
