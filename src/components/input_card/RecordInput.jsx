@@ -6,6 +6,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { useState, useEffect, useRef } from "react";
 import { insertDetails } from "./apiFunctions/SubmitResponse";
 import { rateResponse } from "./apiFunctions/LambdaFunctions";
@@ -107,29 +108,31 @@ const RecordInput = ({
   }, [countdown]);
 
   const onSubmit = async () => {
-    let result;
-    const user_id = session.user.id;
-    const insertInterviewResponse = await insertInterview(
-      user_id,
-      questionTitle
-    );
-    console.log(insertInterviewResponse.data[0].interview_id);
-    // setInterviewId(insertInterviewResponse.data[0].interview_id);
+    try {
+      let result;
+      const isGuest = localStorage.getItem("isGuest") === "true";
+      if (!spokenText) {
+        setSpokenText("No response");
+        result = {};
+      } else {
+        setIsGrading(true);
+        const apiResult = await rateResponse(question, spokenText);
+        result = apiResult.data;
+      }
+      setResult(result);
+      setQuestion(question);
+      setResponse(spokenText);
+      if (isGuest) {
+        toast.info("Graded as guest", { description: "Results aren't saved." });
+        router.push("/feedback");
+        return;
+      }
 
-    setIsGrading(true);
-    if (!spokenText) {
-      setSpokenText("No response");
-      result = {}; 
-    } else {
-      const apiResult = await rateResponse(question, spokenText);
-      result = apiResult.data;
-    }
-    setResult(result);
-    console.log(result)
-    setQuestion(question);
-    setResponse(spokenText);
-    const isGuest = localStorage.getItem("isGuest");
-    if (isGuest == "false") { //Need to check string literal because the localStorage stored it as string
+      const user_id = session.user.id;
+      const insertInterviewResponse = await insertInterview(
+        user_id,
+        questionTitle
+      );
 
       const detailsResult = await insertDetails(
         insertInterviewResponse.data[0].interview_id,
@@ -138,8 +141,22 @@ const RecordInput = ({
         result
       );
       bumpNavbar();
+      router.push(`/feedback/${insertInterviewResponse.data[0].interview_id}`);
+    } catch (err) {
+      const status = err?.status ?? err?.code ?? "";
+      const message =
+        err?.details?.error ||
+        err?.message ||
+        "Something went wrong saving your interview.";
+
+      toast.error("Save failed", {
+        description: status ? `${message} (code: ${status})` : message,
+        action: {
+          label: "Retry",
+          onClick: () => onSubmit(),
+        },
+      });
     }
-    router.push(`/feedback/${insertInterviewResponse.data[0].interview_id}`);
   };
 
   return (

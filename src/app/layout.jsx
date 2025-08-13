@@ -5,6 +5,7 @@ import "./styles/globals.css";
 import AuthGuard from "@/components/AuthGuard";
 import Navbar from "@/components/Navbar/Navbar";
 import { usePathname } from "next/navigation";
+import { Toaster } from "@/components/ui/sonner";
 
 
 // const geistSans = Geist({
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
         {!isLoginPage && <Navbar />}
         <main className="flex-1 transition-all duration-300">
           <AuthGuard>{children}</AuthGuard>
+          <Toaster position="bottom-right" closeButton richColors/>
         </main>
       </body>
     </html>
