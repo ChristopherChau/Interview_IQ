@@ -107,9 +107,7 @@ const RecordInput = ({
   }, [countdown]);
 
   const onSubmit = async () => {
-    if (!session) {
-      return;
-    }
+    let result;
     const user_id = session.user.id;
     const insertInterviewResponse = await insertInterview(
       user_id,
@@ -119,25 +117,27 @@ const RecordInput = ({
     // setInterviewId(insertInterviewResponse.data[0].interview_id);
 
     setIsGrading(true);
-    if (spokenText) {
-      const result = await rateResponse(question, spokenText);
-      setResult(result.data);
-      setQuestion(question);
-      setResponse(spokenText);
-      console.log(result.data.result);
-      const isGuest = localStorage.getItem("isGuest");
-      console.log("Is guest: ", isGuest);
-      if (isGuest == "false") {
-        //Need to check string literal because the localStorage stored it as string
-        console.log("Inserted details into DB ");
-        const detailsResult = await insertDetails(
-          insertInterviewResponse.data[0].interview_id,
-          question,
-          spokenText,
-          result.data.result
-        );
-        bumpNavbar();
-      }
+    if (!spokenText) {
+      setSpokenText("No response");
+      result = {}; 
+    } else {
+      const apiResult = await rateResponse(question, spokenText);
+      result = apiResult.data;
+    }
+    setResult(result);
+    console.log(result)
+    setQuestion(question);
+    setResponse(spokenText);
+    const isGuest = localStorage.getItem("isGuest");
+    if (isGuest == "false") { //Need to check string literal because the localStorage stored it as string
+
+      const detailsResult = await insertDetails(
+        insertInterviewResponse.data[0].interview_id,
+        question,
+        spokenText,
+        result
+      );
+      bumpNavbar();
     }
     router.push(`/feedback/${insertInterviewResponse.data[0].interview_id}`);
   };

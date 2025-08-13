@@ -38,9 +38,9 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const { interview_id, question, response, feedback } = await req.json();
-  if (!interview_id || !question || !response || !feedback) {
-    console.log(`Printing request data in order: ${feedback}`);
+  const { interview_id, question, response, feedback = {} } = await req.json();
+  if (!interview_id || !question) {
+    console.log("Not all key details are given to insert into the interview details table")
     return new Response(
       JSON.stringify({
         error:
@@ -83,12 +83,3 @@ export async function POST(req) {
     );
   }
 }
-// {
-//   "interview_id": 1,
-//   "question": "Interview question 1",
-//   "response": "Some response",
-//   "feedback": {
-//       "clarity": 5,
-//       "overall": 5
-//   }
-// }
