@@ -102,13 +102,11 @@ export default function InputCard({
     if (session) {
       const recentInterviews = await fetchRecentInterviews(session.user.id);
       if (recentInterviews) {
-        console.log(recentInterviews);
         recentInterviews.forEach((object, index) => {
           previousChats.push(object.title);
         });
       }
     }
-    console.log("Previous chats: ", previousChats);
 
     const questionResponse = await fetchQuestions(
       type,

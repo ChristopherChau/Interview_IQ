@@ -20,7 +20,6 @@ const FeedbackPage = () => {
     (async () => {
       try {
         setIsLoading(true);
-        console.log(id);
         const result = await getInterviewDetails(id);
         setResult(result.feedback);
         setQuestion(result.question);

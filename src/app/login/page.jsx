@@ -47,7 +47,6 @@ export default function LoginPage() {
             providers={["google"]}
             appearance={{ theme: ThemeSupa }}
             onAuthStateChange={async (event, session) => {
-              console.log("Auth state change:", event, session); // ✅ Debug line
               if (event === "SIGNED_IN" && session) {
                 const user_id = session.user.id;
                 localStorage.setItem("isGuest", "false")

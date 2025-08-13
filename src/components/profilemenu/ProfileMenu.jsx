@@ -39,7 +39,9 @@ export default function ProfileMenu() {
   async function signOut() {
     const { error } = await supabaseAnon.auth.signOut();
     if (error) {
-      console.log(`Error trying to log out ${error.message}`);
+      toast.error("Save failed", {
+        description: error.status ? `${error.message} (code: ${error.status})` : error.message,
+      });
     }
     localStorage.setItem("isGuest", "false");
     router.push("/login");

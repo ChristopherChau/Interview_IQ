@@ -56,16 +56,8 @@ const RecordInput = ({
         };
 
         recognition.onerror = (event) => {
-          console.error("Speech recognition error:", event.error);
+          
           setIsRecording(false);
-        };
-
-        recognition.onstart = () => {
-          console.log("Speech recognition started");
-        };
-
-        recognition.onend = () => {
-          console.log("Speech recognition ended");
         };
 
         recognitionRef.current = recognition;
@@ -78,7 +70,6 @@ const RecordInput = ({
   const recordResponse = () => {
     if (isRecording) {
       recognitionRef.current?.stop();
-      console.log(spokenText);
       setIsDoneRecording(true);
       setIsRecording(false);
       setButtonText("Submit Response");

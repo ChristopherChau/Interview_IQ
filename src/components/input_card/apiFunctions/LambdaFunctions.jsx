@@ -13,7 +13,6 @@ export async function fetchQuestions(type, role, experience, focus, previousChat
 
     const lambdaResponse = await response.json();
     let result = lambdaResponse.data.result;
-    console.log(lambdaResponse);
 
     if (typeof result === "string") {
       // Try to match ```json ... ```
