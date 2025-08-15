@@ -21,19 +21,21 @@ export default function ProfileMenu() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [username, setUsername] = useState("");
   const [hasSession, setHasSession] = useState(false);
-  const [hasAvatar, setHasAvatar] = useState();
+  const [hasAvatar, setHasAvatar] = useState(true);
   const [initials, setInitials] = useState("");
   
   useEffect(() => {
+    let mounted = true;
+
     const getSession = async () => {
       const { data } = await supabaseAnon.auth.getSession();
       if (data.session) {
         setAvatarUrl(data.session.user.user_metadata.avatar_url);
         setUsername(data.session.user.user_metadata.name);
         setHasSession(true);
-        console.log(data)
+        console.log(data);
         const parts = data.session.user.user_metadata.name.split(" ");
-        setInitials(parts[0][0].toUpperCase() + parts[1][0].toUpperCase())
+        setInitials(parts[0][0].toUpperCase() + parts[1][0].toUpperCase());
       } else {
         setHasSession(false);
       }
@@ -69,12 +71,21 @@ export default function ProfileMenu() {
     <div className="flex justify-end">
       <DropdownMenu>
         <DropdownMenuTrigger className="cursor-pointer">
-          <Avatar className="border-2 p-4 items-center justify-center">
-            <AvatarImage src={avatarUrl} />
+          <Avatar className="border-2 items-center justify-center h-9 w-9 overflow-hidden">
+            {hasAvatar && avatarUrl ? (
+              <AvatarImage
+                src={avatarUrl}
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  setHasAvatar(false);
+                }}
+              />
+            ) : (
             <AvatarFallback>{initials}</AvatarFallback>
+            )}
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" className="px-4">
           <DropdownMenuLabel className="flex items-center gap-2 ml-2 font-medium">
             <PersonIcon />
             {username}
