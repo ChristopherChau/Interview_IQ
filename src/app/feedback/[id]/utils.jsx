@@ -1,9 +1,8 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import supabaseAnon from '@/lib/supabaseAnon';
+
 
 export default async function getInterviewDetails(id) {
-  const supabase = createClientComponentClient();
-
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAnon
     .from('interview_details')
     .select('interview_id, question, feedback')
     .eq('interview_id', id)

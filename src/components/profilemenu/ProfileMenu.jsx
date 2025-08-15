@@ -23,7 +23,7 @@ export default function ProfileMenu() {
   const [hasSession, setHasSession] = useState(false);
   const [hasAvatar, setHasAvatar] = useState(true);
   const [initials, setInitials] = useState("");
-  
+
   useEffect(() => {
     let mounted = true;
 
@@ -33,9 +33,10 @@ export default function ProfileMenu() {
         setAvatarUrl(data.session.user.user_metadata.avatar_url);
         setUsername(data.session.user.user_metadata.name);
         setHasSession(true);
-        console.log(data);
-        const parts = data.session.user.user_metadata.name.split(" ");
-        setInitials(parts[0][0].toUpperCase() + parts[1][0].toUpperCase());
+        const rawName = data.session.user.user_metadata.name || "";
+        const parts = rawName.trim().split(/\s+/);
+        const initials = ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "U";
+        setInitials(initials)
       } else {
         setHasSession(false);
       }
@@ -48,7 +49,9 @@ export default function ProfileMenu() {
     const { error } = await supabaseAnon.auth.signOut();
     if (error) {
       toast.error("Save failed", {
-        description: error.status ? `${error.message} (code: ${error.status})` : error.message,
+        description: error.status
+          ? `${error.message} (code: ${error.status})`
+          : error.message,
       });
     }
     localStorage.setItem("isGuest", "false");
@@ -81,7 +84,7 @@ export default function ProfileMenu() {
                 }}
               />
             ) : (
-            <AvatarFallback>{initials}</AvatarFallback>
+              <AvatarFallback>{initials}</AvatarFallback>
             )}
           </Avatar>
         </DropdownMenuTrigger>

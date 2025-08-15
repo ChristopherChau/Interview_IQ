@@ -1,5 +1,4 @@
 "use client";
-import { useFeedbackStore } from "../../store/feedbackStore";
 import { useState, useEffect } from "react";
 import ProfileMenu from "@/components/profilemenu/ProfileMenu";
 import Details from "../Details";
@@ -10,6 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import getInterviewDetails from "./utils";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import supabaseAnon from "@/lib/supabaseAnon";
 
 
 const FeedbackPage = () => {
@@ -26,15 +26,16 @@ const FeedbackPage = () => {
     let alive = true;
     (async () => {
       const isGuest = localStorage.getItem("isGuest") === "true";
-      const { data: { user } } = await supabase.auth.getUser();
-      if (isGuest || !user){
+      const { data } = await supabaseAnon.auth.getSession();
+      if (isGuest || !data.session.user){
         router.replace("/404");
         if (alive) setIsLoading(false);
         return;
       }
       try {
         const row = await getInterviewDetails(id);
-        setResult(row.feedback);
+        console.log(row.feedback)
+        setResult(row.feedback.result);
         setQuestion(row.question);
         setIsLoading(false);
       } catch (err) {

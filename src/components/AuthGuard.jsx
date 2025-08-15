@@ -11,13 +11,14 @@ export default function AuthGuard({children}) {
   const hasInsertedUser = useRef(false); 
 
 
-  async function insertUser(user_id) {
+  async function insertUser(user_id, username) {
     try {
       const response = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user_id: user_id,
+        user_id: user_id,
+          user_name: username,
         }),
       });
 
@@ -72,9 +73,10 @@ export default function AuthGuard({children}) {
         hasInsertedUser.current = true;
 
         const user_id = data.session.user.id;
+        const username = data.session.user.user_metadata.name;
         const existingUsers = await getUser(user_id);
         if (!existingUsers || existingUsers.length === 0) {
-          await insertUser(user_id);
+          await insertUser(user_id, username);
         }
       }
     }
