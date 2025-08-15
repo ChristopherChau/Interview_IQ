@@ -49,11 +49,13 @@ export default function LoginPage() {
             onAuthStateChange={async (event, session) => {
               if (event === "SIGNED_IN" && session) {
                 const user_id = session.user.id;
+                const username = session.user.user_metadata.name
                 localStorage.setItem("isGuest", "false")
-
+                console.log("signed in")
                 const existingUsers = await getUser(user_id);
                 if (existingUsers.length === 0) {
-                  await insertUser(user_id);
+                  console.log("inserting user?")
+                  await insertUser(user_id, username);
                 }
 
                 router.push("/");

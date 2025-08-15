@@ -36,7 +36,8 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const { user_id } = await req.json();
+  const { user_id, user_name } = await req.json();
+  console.log("Inserting user: ", user_name)
   if (!user_id) {
     return new Response(
       JSON.stringify({
@@ -48,7 +49,7 @@ export async function POST(req) {
   try {
     const { data, error } = await supabaseClient
       .from("users")
-      .insert([{ user_id: user_id }]);
+      .insert([{ user_id: user_id, user_name: user_name}]);
     if (error) {
       throw error;
     }

@@ -1,15 +1,18 @@
-export default async function getInterviewDetails(interview_id){
-  try{
-    const response = await fetch(`/api/interviews/db/details?interview_id=${interview_id}`);
-    if (!response.ok){
-      throw new Error(`Response status: ${response.status}`)
-    }
-    const result = await response.json();
-    return result.data;
+import supabaseAnon from '@/lib/supabaseAnon';
 
-  } catch(err) {
-    console.error("Failed to get interview details for this specific interview ", err.message);
-    throw err;
+
+export default async function getInterviewDetails(id) {
+  const { data, error } = await supabaseAnon
+    .from('interview_details')
+    .select('interview_id, question, feedback')
+    .eq('interview_id', id)
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!data) {
+    const e = new Error('Not found or unauthorized');
+    e.status = 404;
+    throw e;
   }
-
+  return data;
 }
