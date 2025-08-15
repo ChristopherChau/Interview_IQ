@@ -60,7 +60,7 @@ export default function ProfileMenu() {
       <Button
         variant="outline"
         onClick={() => router.push("/login")}
-        className="text-sm"
+        className="text-sm cursor-pointer"
       >
         Login
       </Button>
