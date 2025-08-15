@@ -14,13 +14,16 @@ import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { useState, useEffect } from "react";
 import { ExitIcon, PersonIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
+import { AvatarFallback } from "@radix-ui/react-avatar";
 
 export default function ProfileMenu() {
   const router = useRouter();
   const [avatarUrl, setAvatarUrl] = useState("");
   const [username, setUsername] = useState("");
   const [hasSession, setHasSession] = useState(false);
-
+  const [hasAvatar, setHasAvatar] = useState();
+  const [initials, setInitials] = useState("");
+  
   useEffect(() => {
     const getSession = async () => {
       const { data } = await supabaseAnon.auth.getSession();
@@ -28,6 +31,9 @@ export default function ProfileMenu() {
         setAvatarUrl(data.session.user.user_metadata.avatar_url);
         setUsername(data.session.user.user_metadata.name);
         setHasSession(true);
+        console.log(data)
+        const parts = data.session.user.user_metadata.name.split(" ");
+        setInitials(parts[0][0].toUpperCase() + parts[1][0].toUpperCase())
       } else {
         setHasSession(false);
       }
@@ -63,8 +69,9 @@ export default function ProfileMenu() {
     <div className="flex justify-end">
       <DropdownMenu>
         <DropdownMenuTrigger className="cursor-pointer">
-          <Avatar>
+          <Avatar className="border-2 p-4 items-center justify-center">
             <AvatarImage src={avatarUrl} />
+            <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
