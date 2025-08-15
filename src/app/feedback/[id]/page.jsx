@@ -6,29 +6,46 @@ import Details from "../Details";
 import { ReaderIcon } from "@radix-ui/react-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ScoreChart from "../ScoreChart";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import getInterviewDetails from "./utils";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
 
 const FeedbackPage = () => {
   const { id } = useParams();
+  const router = useRouter();
+  const supabase = createClientComponentClient();
+
   const [result, setResult] = useState(null);
   const [question, setQuestion] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
+    let alive = true;
     (async () => {
+      const isGuest = localStorage.getItem("isGuest") === "true";
+      const { data: { user } } = await supabase.auth.getUser();
+      if (isGuest || !user){
+        router.replace("/404");
+        if (alive) setIsLoading(false);
+        return;
+      }
       try {
-        setIsLoading(true);
-        const result = await getInterviewDetails(id);
-        setResult(result.feedback);
-        setQuestion(result.question);
+        const row = await getInterviewDetails(id);
+        setResult(row.feedback);
+        setQuestion(row.question);
         setIsLoading(false);
       } catch (err) {
         console.error(`Error trying to get details for ${id}: `, err);
+        router.replace("/404");
+      } finally {
+        if (alive) setIsLoading(false)
       }
     })();
-  }, []);
+    return () => {alive = false;};
+  }, [id, supabase, router]);
 
   return (
     <>
