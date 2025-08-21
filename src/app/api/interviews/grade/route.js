@@ -13,24 +13,23 @@ export async function POST(req) {
     );
   }
   try {
-    const prompt = `Evaluate the response and return ONLY a valid JSON object in the format:
+    const prompt = `Evaluate the response and return ONLY a valid JSON object in the format here. Also feedback in this case is "what was done well or could be improved" and score is <1-10> rate it 1-10 with 1 being bad 10 being good, return a number for score:
       {
-        "structuring": <1-10> rate it 1-10 so return a number,
-        "relevance": <1-10> rate it 1-10 so return a number,
-        "depth": <1-10> rate it 1-10 so return a number,
-        "delivery": <1-10> rate it 1-10 so return a number,
-        "correctness": <1-10> rate it 1-10 so return a number,
-        "overall": <1-10> rate it 1-10 so return a number,
+        "structuring": <score>,
+        "relevance": <score>,
+        "depth": <score>,
+        "delivery": <score>,
+        "correctness": <score>,
+        "overall": <score>,
         "notes": {
-          "structuring": "<what was done well or could be improved>",
-          "relevance": "<what was done well or could be improved>",
-          "depth": "<what was done well or could be improved>",
-          "delivery": "<what was done well or could be improved>",
-          "correctness": "<what was done well or could be improved>",
+          "structuring": "<feedback>",
+          "relevance": "<feedback>",
+          "depth": "<feedback>",
+          "delivery": "<feedback>",
+          "correctness": "<feedback>",
           "overall": "<brief overall feedback>"
         }
       }
-      No commentary, markdown, or extra text. Grade strictly to each criteria
       "question": ${question},
     "response": ${response}`;
 

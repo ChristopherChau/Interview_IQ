@@ -12,9 +12,15 @@ export const useFeedbackStore = create(
 
       response: null,
       setResponse: (response) => set({ response }),
+
+      _hasHydrated: false,
+      setHasHydrated: (v) => set({ _hasHydrated: v }),
     }),
     {
       name: "feedback-storage",
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

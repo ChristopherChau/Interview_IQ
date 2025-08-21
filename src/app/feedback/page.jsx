@@ -13,6 +13,8 @@ const FeedbackPage = () => {
   const storeResult = useFeedbackStore((state) => state.result);
   const storeQuestion = useFeedbackStore((state) => state.question);
   const storeResponse = useFeedbackStore((state) => state.response);
+  const hasHydrated = useFeedbackStore((s) => s._hasHydrated);
+
 
   const [result, setResult] = useState(null);
   const [question, setQuestion] = useState(null);
@@ -25,6 +27,14 @@ const FeedbackPage = () => {
     setResponse(storeResponse);
     setIsLoading(false);
   }, [storeResult, storeQuestion, storeResponse]);
+
+  if (!hasHydrated) {
+    return (
+      <main className="relative flex flex-col z-10 w-full h-full justify-center">
+        <LoadingSpinner text="Loading" />
+      </main>
+    );
+  }
 
   return (
     <>
