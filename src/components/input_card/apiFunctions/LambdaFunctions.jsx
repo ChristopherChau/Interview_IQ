@@ -1,4 +1,10 @@
-export async function fetchQuestions(type, role, experience, focus, previousChats) {
+export async function fetchQuestions(
+  type,
+  role,
+  experience,
+  focus,
+  previousChats
+) {
   try {
     const response = await fetch("/api/interviews/generate", {
       method: "POST",
@@ -12,16 +18,14 @@ export async function fetchQuestions(type, role, experience, focus, previousChat
     }
 
     const lambdaResponse = await response.json();
-    let result = lambdaResponse.data.result;
+    let result = lambdaResponse.data.question;
 
     if (typeof result === "string") {
-      // Try to match ```json ... ```
       const match = result.match(/```json\s*([\s\S]*?)\s*```/);
       if (match) {
-        result = match[1]; // Extract inner JSON string
+        result = match[1];
       }
 
-      // Step 2: Try parsing
       try {
         result = JSON.parse(result);
       } catch (e) {
@@ -29,9 +33,10 @@ export async function fetchQuestions(type, role, experience, focus, previousChat
         result = {};
       }
     }
+
     return {
-      question: lambdaResponse.data.result.question,
-      title: lambdaResponse.data.result.title,
+      question: result.question,
+      title: result.title,
     };
   } catch (err) {
     console.error("Failed to fetch questions:", err.message);

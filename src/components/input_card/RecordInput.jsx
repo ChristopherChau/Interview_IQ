@@ -56,7 +56,6 @@ const RecordInput = ({
         };
 
         recognition.onerror = (event) => {
-          
           setIsRecording(false);
         };
 
@@ -67,21 +66,24 @@ const RecordInput = ({
     }
   }, []);
 
-  const rateResponseWithRetry = async (question, spokenText, maxRetries = 3) => {
+  const rateResponseWithRetry = async (
+    question,
+    spokenText,
+    maxRetries = 3
+  ) => {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       const apiResult = await rateResponse(question, spokenText);
       const result = apiResult.data;
-  
+
       if (result && Object.keys(result).length > 0) {
-        return result; 
+        return result;
       }
-  
+
       console.warn(`Empty result on attempt ${attempt}, retrying...`);
     }
     throw new Error("Rate response failed after retries");
   };
 
-  
   const recordResponse = () => {
     if (isRecording) {
       recognitionRef.current?.stop();
